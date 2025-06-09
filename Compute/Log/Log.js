@@ -29,3 +29,10 @@ function ShowToast(message, type = 'success', duration = 3000) {
         setTimeout(() => toast.remove(), 300);
     });
 }
+
+function GetCurrentTime(){
+    const time = performance.now();  // 返回自页面加载以来的毫秒数（浮点数）
+    const milliseconds = Math.floor(time % 1000);
+    
+    return milliseconds;//GetgetMilliseconds
+}

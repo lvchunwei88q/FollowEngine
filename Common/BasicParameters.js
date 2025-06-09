@@ -7,4 +7,3 @@ let BScreenViewHigh = 0;
 let BScreenViewWidth = 0;
 let BFrame = 0;
 let Initialize = false;
-let BDebugJSON = true;

@@ -4,5 +4,8 @@
   },
   {
     "FrameLog": true
+  },
+  {
+    "PixelComputingLog": true
   }
 ]

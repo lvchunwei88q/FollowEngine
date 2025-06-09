@@ -85,6 +85,7 @@ function CalculatePercentageTick(Debug){
         BScreenViewWidth = W90;
         document.getElementById("MainInterface").style.width = `${W90}px`;
         document.getElementById("Menu").style.width = `${W10}px`;
+        LoadRenderingInterface();
     }
     if(BViewHigh !== ViewportHeight){
         BViewHigh = ViewportHeight;
@@ -94,5 +95,6 @@ function CalculatePercentageTick(Debug){
         if(BCalculatePercentageDebug){
             console.log("BViewHigh:"+BViewHigh);
         }
+        LoadRenderingInterface();
     }
 }

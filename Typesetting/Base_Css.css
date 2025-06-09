@@ -8,7 +8,7 @@
     width: 1728px;
     height: 1080px;
     float: left;
-    background: #000;
+    background: #d000ff;
 }
 #Menu{
     margin: 0;
@@ -25,4 +25,12 @@
     background: #ff9a00;/* 默认底色 */
     text-align: center;
 	color: #FFFFFF;
+}
+
+/* 默认一个像素是1px但是太卡了锁以开到5px */
+.Pixel{
+    background: #000000;/* 默认色 */
+    width: 5px;
+    height: 5px;
+    float: left;
 }
