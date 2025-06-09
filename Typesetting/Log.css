@@ -1,0 +1,79 @@
+/* 弹窗容器 */
+.toast-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
+}
+
+/* 基础弹窗样式 */
+.toast {
+    position: relative;
+    min-width: 250px;
+    padding: 15px 25px;
+    margin-bottom: 15px;
+    border-radius: 6px;
+    color: white;
+    opacity: 0;
+    transform: translateX(100%);
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    display: flex;
+    align-items: center;
+}
+
+/* 显示时的动画 */
+.toast.show {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+/* 不同类型弹窗的颜色 */
+.toast.success {
+    background: #4CAF50;
+    border-left: 5px solid #2e7d32;
+}
+
+.toast.error {
+    background: #f44336;
+    border-left: 5px solid #b71c1c;
+}
+
+.toast.warning {
+    background: #ff9800;
+    border-left: 5px solid #ef6c00;
+}
+
+/* 关闭按钮 */
+.toast-close {
+    margin-left: auto;
+    cursor: pointer;
+    padding: 0 8px;
+    font-weight: bold;
+    opacity: 0.8;
+}
+
+.toast-close:hover {
+    opacity: 1;
+}
+
+/* 进度条动画 */
+.toast-progress {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 3px;
+    background: rgba(255, 255, 255, 0.3);
+    width: 100%;
+    animation: progress linear;
+}
+
+@keyframes progress {
+    from {
+        width: 100%
+    }
+
+    to {
+        width: 0
+    }
+}
