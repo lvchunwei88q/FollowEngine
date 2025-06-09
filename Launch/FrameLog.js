@@ -1,6 +1,8 @@
-function FrameLog(InitializeFrameCalculations){
+function FrameLog(InitializeFrameCalculations,FrameLogDebug){
     const frameLog = setInterval(function(){
-        document.querySelectorAll(".MenuList")[0].innerHTML = `FPS:${BFrame * 2}`;
+        if(FrameLogDebug){
+            document.querySelectorAll(".MenuList")[0].innerHTML = `FPS:${BFrame * 2}`;
+        }
         BFrame = 0;
     },500);//500ms
     

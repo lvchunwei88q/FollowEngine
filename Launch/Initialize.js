@@ -1,6 +1,6 @@
-function FInitialize(){
+function FInitialize(FrameLogDebug){
     let InitializeFrameCalculations = false;
-    InitializeFrameCalculations = FrameLog(InitializeFrameCalculations);
+    InitializeFrameCalculations = FrameLog(InitializeFrameCalculations,FrameLogDebug);
     
     if(InitializeFrameCalculations)
         Initialize = true;

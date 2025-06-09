@@ -5,15 +5,15 @@
 }
 #MainInterface{
     margin: 0;
-    width: 90%;
-    height: 400px;
+    width: 1728px;
+    height: 1080px;
     float: left;
     background: #000;
 }
 #Menu{
     margin: 0;
-    width: 10%;
-    height: 400px;
+    width: 192px;
+    height: 1080px;
     float: left;
     background: #ffffff;
 }
