@@ -100,7 +100,7 @@ function RenderingPerformanceTesting(GetquerySelectorAll,M_TheTimeForCalculating
     
     let GetBScreenViewHigh = JSON.parse(localStorage.getItem("ScreenViewHighPixel"));
     let GetBScreenViewWidth = JSON.parse(localStorage.getItem("ScreenViewWidthPixel"));
-    let X = 0,Y = 1;
+    let X = 1,Y = 1;
     const CCTime = GetCurrentTime();
     
     if (GetquerySelectorAll[1] !== undefined){
@@ -111,6 +111,7 @@ function RenderingPerformanceTesting(GetquerySelectorAll,M_TheTimeForCalculating
                 Y++;
                 X = 0;
             }
+            
             let Postion = CoordinateSystem2D_S(GetBScreenViewHigh,GetBScreenViewWidth,Y,X);
 
             let rgb = [];
