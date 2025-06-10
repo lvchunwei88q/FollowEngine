@@ -1,4 +1,8 @@
-function MainRender(){
+let bRenderEngineLoop = true,M_TheTimeForCalculatingFullNumberOfPixels,
+GetquerySelectorAllIndex = 0,GetquerySelectorAllForEachIndex = 0;//循环
+let GetquerySelectorAll;
+
+function MainRender(TTFFNOP){
     /* 一、渲染管线的主要阶段
 1. 应用阶段（Application Stage）
 CPU端工作：
@@ -34,21 +38,98 @@ GPU端处理，将3D模型转换为屏幕空间的2D坐标：
 透明度混合（Alpha Blending）：处理半透明物体。
 抗锯齿（Anti-Aliasing）：平滑边缘锯齿（如MSAA、TAA）。 */
 
-    SpatialTransformation();//第一步从模型空间转换到世界空间，从世界空间转换到视图空间
+    M_TheTimeForCalculatingFullNumberOfPixels = TTFFNOP;
     
+    //渲染与Editor的帧计算分开进行
+    if (bRenderEngineLoop){
+        if (GetquerySelectorAllIndex >=16){
+            GetquerySelectorAllIndex = 0;
+            GetquerySelectorAll = document.querySelectorAll(".Pixel");
+        }else if (GetquerySelectorAllIndex === 0){
+            GetquerySelectorAll = document.querySelectorAll(".Pixel");
+        }
+        GetquerySelectorAllIndex++;
+        
+        
+        if (GetquerySelectorAllForEachIndex >= 6){
+            GetquerySelectorAllForEachIndex = 0;
+            GetquerySelectorAll.forEach((item)=>{
+                if (item.style.background !== "")
+                    item.style.background = "#000000";
+            });
+        }else if(GetquerySelectorAllForEachIndex === 0){
+        }
+        GetquerySelectorAllForEachIndex++;
+        
+        
+        let bSpatialTransformation = SpatialTransformation(GetquerySelectorAll);//第一步从模型空间转换到世界空间，从世界空间转换到视图空间
+        let bRenderingPerformanceTesting = RenderingPerformanceTesting(GetquerySelectorAll,M_TheTimeForCalculatingFullNumberOfPixels);
+        
+        if (bSpatialTransformation && bRenderingPerformanceTesting){
+            bRenderEngineLoop = true;
+        }
+    }
 }
 
-function SpatialTransformation(){
+function SpatialTransformation(GetquerySelectorAll){
     let GetBScreenViewHigh = BScreenViewHigh;
     let GetBScreenViewWidth = BScreenViewWidth;
     if(GetBScreenViewHigh !== 0 && GetBScreenViewWidth !== 0){
-        //GetJSON
-        ReadJSON_Editor("Moudels/Cube.json")
-            .then(data => {
-                Space2D(data);
-            })
-            .catch(err => {
-                console.error("失败:", err);
-            });
+        if (!JSON.parse(localStorage.getItem("EditorMoudels"))){
+            //GetJSON
+            ReadJSON_Editor("Moudels/Cube.json")
+                .then(data => {
+                    localStorage.setItem("EditorMoudels", JSON.stringify(data));
+                })
+                .catch(err => {
+                    console.error("失败:", err);
+                });
+        }
+        
+        let data = JSON.parse(localStorage.getItem("EditorMoudels"));
+        
+        if (data !== null && data !== undefined) {
+            Space2D(data,GetquerySelectorAll);
+        }
     }
+    return true;
+}
+
+function RenderingPerformanceTesting(GetquerySelectorAll,M_TheTimeForCalculatingFullNumberOfPixels){
+    if (!M_TheTimeForCalculatingFullNumberOfPixels)return true;
+    
+    let GetBScreenViewHigh = JSON.parse(localStorage.getItem("ScreenViewHighPixel"));
+    let GetBScreenViewWidth = JSON.parse(localStorage.getItem("ScreenViewWidthPixel"));
+    let X = 0,Y = 1;
+    const CCTime = GetCurrentTime();
+    
+    if (GetquerySelectorAll[1] !== undefined){
+        let ForIndex = GetBScreenViewHigh * GetBScreenViewWidth;
+        for(let i = 0; i < ForIndex; i++){
+            X++;
+            if (X > GetBScreenViewWidth){
+                Y++;
+                X = 0;
+            }
+            let Postion = CoordinateSystem2D_S(GetBScreenViewHigh,GetBScreenViewWidth,Y,X);
+
+            let rgb = [];
+
+            rgb.push({
+                "r" :RandomNum(1,255),
+                "g" :RandomNum(1,255),
+                "b" :RandomNum(1,255)
+            });
+
+            if(Postion !== null){
+                GetquerySelectorAll[Postion -1].style.background = `rgb(${rgb[0].r},${rgb[0].g},${rgb[0].b})`;
+            }
+        }
+    }
+    
+    const CSTime = GetCurrentTime();
+    let Time = CSTime-CCTime;
+    console.log("全像素计算耗时:"+Time+"ms");
+
+    return true;
 }

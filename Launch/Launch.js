@@ -1,4 +1,4 @@
-let F_bFrameLog,F_bCalculatePercentageDebug;//这里就是json的参数
+let F_bFrameLog,F_bCalculatePercentageDebug,F_TheTimeForCalculatingFullNumberOfPixels,F_PixelComputingLog;//这里就是json的参数
 
 function Launch(){//启动
     let bEngineLoop = true;//控制引擎循环
@@ -19,6 +19,9 @@ function Launch(){//启动
                         //所以每帧计算前需要先计算出没有小数长宽的比例
                         CalculatePercentageTick(data[0].CalculatePercentageDebug);//计算百分比
                         F_bCalculatePercentageDebug = data[0].CalculatePercentageDebug;
+
+                        F_TheTimeForCalculatingFullNumberOfPixels = data[3].TheTimeForCalculatingFullNumberOfPixels;
+                        F_PixelComputingLog = data[2].PixelComputingLog;
 
                         if(!Initialize){//初始化
                             FInitialize(data[1].FrameLog);
@@ -44,7 +47,7 @@ function Launch(){//启动
             }
             
             /* 在一切计算完成之后就可以开始Render了 */
-            MainRender();
+            MainRender(F_TheTimeForCalculatingFullNumberOfPixels);
             
             bFrameFrameLogTick = FrameLogTick();//FrameLogTick
             
@@ -82,6 +85,16 @@ function ReadJSON_EditorLoop(){
                     if(F_bFrameLog !== data[1].FrameLog){
                         ShowToast("需要重启引擎!","warning");
                         F_bFrameLog = data[1].FrameLog;
+                    }
+
+                    if(F_PixelComputingLog !== data[2].PixelComputingLog){
+                        ShowToast(data[2].PixelComputingLog ? "打印像素需要的时间" : "关闭打印像素需要的时间");
+                        F_PixelComputingLog = data[2].PixelComputingLog;
+                    }
+                    
+                    if (F_TheTimeForCalculatingFullNumberOfPixels !== data[3].TheTimeForCalculatingFullNumberOfPixels){
+                        F_TheTimeForCalculatingFullNumberOfPixels = data[3].TheTimeForCalculatingFullNumberOfPixels;
+                        ShowToast(F_PixelComputingLog ? "打印全量像素计算时间" : "关闭打印全量像素计算时间");
                     }
 
                 })

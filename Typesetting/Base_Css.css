@@ -25,6 +25,17 @@
     background: #ff9a00;/* 默认底色 */
     text-align: center;
 	color: #FFFFFF;
+
+    white-space: nowrap;      /* 禁止换行 */
+    overflow: hidden;         /* 隐藏溢出内容 */
+    text-overflow: ellipsis;  /* 显示省略号 */
+    max-width: 192px;         /* 根据需要设置宽度 */
+    display: inline-block;    /* 或 block，根据布局需要 */
+}
+
+.MenuList.Button{
+    border: none;
+    background: #5c75f1 !important;
 }
 
 /* 默认一个像素是1px但是太卡了锁以开到5px */
@@ -33,4 +44,5 @@
     width: 5px;
     height: 5px;
     float: left;
+    will-change: background; /* 预提示浏览器优化 */
 }
