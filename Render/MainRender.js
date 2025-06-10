@@ -100,18 +100,12 @@ function RenderingPerformanceTesting(GetquerySelectorAll,M_TheTimeForCalculating
     
     let GetBScreenViewHigh = JSON.parse(localStorage.getItem("ScreenViewHighPixel"));
     let GetBScreenViewWidth = JSON.parse(localStorage.getItem("ScreenViewWidthPixel"));
-    let X = 1,Y = 1;
+    let X = 0,Y = 1;
     const CCTime = GetCurrentTime();
     
     if (GetquerySelectorAll[1] !== undefined){
         let ForIndex = GetBScreenViewHigh * GetBScreenViewWidth;
         for(let i = 0; i < ForIndex; i++){
-            X++;
-            if (X > GetBScreenViewWidth){
-                Y++;
-                X = 0;
-            }
-            
             let Postion = CoordinateSystem2D_S(GetBScreenViewHigh,GetBScreenViewWidth,Y,X);
 
             let rgb = [];
@@ -123,7 +117,12 @@ function RenderingPerformanceTesting(GetquerySelectorAll,M_TheTimeForCalculating
             });
 
             if(Postion !== null){
-                GetquerySelectorAll[Postion -1].style.background = `rgb(${rgb[0].r},${rgb[0].g},${rgb[0].b})`;
+                GetquerySelectorAll[Postion].style.background = `rgb(${rgb[0].r},${rgb[0].g},${rgb[0].b})`;
+            }
+            X++;
+            if (X > GetBScreenViewWidth){
+                Y++;
+                X = 0;
             }
         }
     }

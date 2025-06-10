@@ -37,6 +37,15 @@
     border: none;
     background: #5c75f1 !important;
 }
+.MenuList.Input{
+    height: 24px !important;
+    border: none;
+    background: #a70cff !important;
+}
+.MenuList.Input input{
+    border: none;
+    background: #ffffff !important;
+}
 
 /* 默认一个像素是1px但是太卡了锁以开到5px */
 .Pixel{
