@@ -1,4 +1,5 @@
-let F_bFrameLog,F_bCalculatePercentageDebug,F_TheTimeForCalculatingFullNumberOfPixels,F_PixelComputingLog;//这里就是json的参数
+let F_bFrameLog,F_bCalculatePercentageDebug,F_TheTimeForCalculatingFullNumberOfPixels,F_PixelComputingLog,
+    F_PrintAndWriteTheObjectID;//这里就是json的参数
 
 function Launch(){//启动
     let bEngineLoop = true;//控制引擎循环
@@ -22,6 +23,7 @@ function Launch(){//启动
 
                         F_TheTimeForCalculatingFullNumberOfPixels = data[3].TheTimeForCalculatingFullNumberOfPixels;
                         F_PixelComputingLog = data[2].PixelComputingLog;
+                        F_PrintAndWriteTheObjectID = data[4].PrintAndWriteTheObjectID;
 
                         if(!Initialize){//初始化
                             FInitialize(data[1].FrameLog);
@@ -47,7 +49,7 @@ function Launch(){//启动
             }
             
             /* 在一切计算完成之后就可以开始Render了 */
-            MainRender(F_TheTimeForCalculatingFullNumberOfPixels);
+            MainRender(F_TheTimeForCalculatingFullNumberOfPixels,F_PrintAndWriteTheObjectID);
             
             bFrameFrameLogTick = FrameLogTick();//FrameLogTick
             
@@ -95,6 +97,11 @@ function ReadJSON_EditorLoop(){
                     if (F_TheTimeForCalculatingFullNumberOfPixels !== data[3].TheTimeForCalculatingFullNumberOfPixels){
                         F_TheTimeForCalculatingFullNumberOfPixels = data[3].TheTimeForCalculatingFullNumberOfPixels;
                         ShowToast(F_PixelComputingLog ? "打印全量像素计算时间" : "关闭打印全量像素计算时间");
+                    }
+
+                    if(F_PrintAndWriteTheObjectID !== data[4].PrintAndWriteTheObjectID){
+                        ShowToast(data[4].PrintAndWriteTheObjectID ? "打印写入物体ID" : "关闭打印写入物体ID");
+                        F_PrintAndWriteTheObjectID = data[4].PrintAndWriteTheObjectID;
                     }
 
                 })

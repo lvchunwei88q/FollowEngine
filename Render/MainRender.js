@@ -2,7 +2,7 @@ let bRenderEngineLoop = true,M_TheTimeForCalculatingFullNumberOfPixels,
 GetquerySelectorAllIndex = 0,GetquerySelectorAllForEachIndex = 0;//循环
 let GetquerySelectorAll;
 
-function MainRender(TTFFNOP){
+function MainRender(TTFFNOP,F_PrintAndWriteTheObjectID){
     /* 一、渲染管线的主要阶段
 1. 应用阶段（Application Stage）
 CPU端工作：
@@ -62,7 +62,7 @@ GPU端处理，将3D模型转换为屏幕空间的2D坐标：
         GetquerySelectorAllForEachIndex++;
         
         
-        let bSpatialTransformation = SpatialTransformation(GetquerySelectorAll);//第一步从模型空间转换到世界空间，从世界空间转换到视图空间
+        let bSpatialTransformation = SpatialTransformation(GetquerySelectorAll,F_PrintAndWriteTheObjectID);//第一步从模型空间转换到世界空间，从世界空间转换到视图空间
         let bRenderingPerformanceTesting = RenderingPerformanceTesting(GetquerySelectorAll,M_TheTimeForCalculatingFullNumberOfPixels);
         
         if (bSpatialTransformation && bRenderingPerformanceTesting){
@@ -71,9 +71,10 @@ GPU端处理，将3D模型转换为屏幕空间的2D坐标：
     }
 }
 
-function SpatialTransformation(GetquerySelectorAll){
+function SpatialTransformation(GetquerySelectorAll,F_PrintAndWriteTheObjectID){
     let GetBScreenViewHigh = BScreenViewHigh;
     let GetBScreenViewWidth = BScreenViewWidth;
+    
     if(GetBScreenViewHigh !== 0 && GetBScreenViewWidth !== 0){
         if (!JSON.parse(localStorage.getItem("EditorMoudels"))){
             //GetJSON
@@ -89,7 +90,9 @@ function SpatialTransformation(GetquerySelectorAll){
         let data = JSON.parse(localStorage.getItem("EditorMoudels"));
         
         if (data !== null && data !== undefined) {
-            Space2D(data,GetquerySelectorAll);
+            for (let i = 1; i <= MoudelIndexall; i++) {
+                Space2D(data,GetquerySelectorAll,F_PrintAndWriteTheObjectID,i,MoudelIndexall);
+            }
         }
     }
     return true;

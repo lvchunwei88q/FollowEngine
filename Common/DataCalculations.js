@@ -72,3 +72,8 @@ function BresenHamLine(x0, y0, x1, y1) {
 
     return points;
 }
+
+function GetTheObjectID(InputClassName){
+    
+    return num = +InputClassName.slice(InputClassName.lastIndexOf('_') + 1); // 9148
+}

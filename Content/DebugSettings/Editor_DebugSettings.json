@@ -6,9 +6,12 @@
     "FrameLog": true
   },
   {
-    "PixelComputingLog": true
+    "PixelComputingLog": false
   },
   {
     "TheTimeForCalculatingFullNumberOfPixels": false
+  },
+  {
+    "PrintAndWriteTheObjectID": true
   }
 ]

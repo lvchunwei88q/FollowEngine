@@ -7,3 +7,6 @@ let BScreenViewHigh = 0;
 let BScreenViewWidth = 0;
 let BFrame = 0;
 let Initialize = false;
+let ObjectClassName = null;
+//占时使用MoudelIndexall代替
+const MoudelIndexall = 2;//MoudelIndex
