@@ -140,6 +140,10 @@ function ConnectVertices(GetquerySelectorAll,GetDataLength,ObjectPostion,GetBScr
         {
             console.log("绑定:"+`ObjectID_${ObjectRandomNumbers}`);
         }
+        let BObjectLoad = JSON.parse(localStorage.getItem("EditorMoudelsLoad"));
+        document.getElementById("MoudelIDArray").innerHTML += `
+              <div class="MoudelIDArrayList">MoudelID_${BObjectLoad.length+1}S:${ObjectRandomNumbers}</div>
+        `;//这里显示模型的ID
         document.querySelectorAll(`.ObjectID_${ObjectRandomNumbers}`).forEach((item)=>{
             item.addEventListener('click', ()=>{
                 //这里写绑定之类的操作
