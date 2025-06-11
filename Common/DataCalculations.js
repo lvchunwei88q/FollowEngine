@@ -74,6 +74,61 @@ function BresenHamLine(x0, y0, x1, y1) {
 }
 
 function GetTheObjectID(InputClassName){
-    
     return num = +InputClassName.slice(InputClassName.lastIndexOf('_') + 1); // 9148
+}
+
+// 填充算法
+function FloodFill(startX, startY,ObjectRandomNumbers,GetBScreenViewHigh,GetBScreenViewWidth,GetquerySelectorAll) {
+    let sss = true;
+    for (let i=0; i < 4; i++) {
+        switch (i){
+            case 0:
+                if (GetTheObjectID(GetquerySelectorAll[CoordinateSystem2D_S(GetBScreenViewHigh,GetBScreenViewWidth,startY+1,startX)-1].className) !== ObjectRandomNumbers){
+                    sss = false;
+                    startY += 1;
+                    GetquerySelectorAll[CoordinateSystem2D_S(GetBScreenViewHigh,GetBScreenViewWidth,startY+1,startX)-1].style.background = "#ffffff";
+                    GetquerySelectorAll[CoordinateSystem2D_S(GetBScreenViewHigh,GetBScreenViewWidth,startY,startX-1)-1].classList.add(`.ObjectID_${ObjectRandomNumbers}`);
+                }
+                break;
+            case 1:
+                if (GetTheObjectID(GetquerySelectorAll[CoordinateSystem2D_S(GetBScreenViewHigh,GetBScreenViewWidth,startY-1,startX)-1].className) !== ObjectRandomNumbers){
+                    sss = false;
+                    startY -= 1;
+                    GetquerySelectorAll[CoordinateSystem2D_S(GetBScreenViewHigh,GetBScreenViewWidth,startY-1,startX)-1].style.background = "#ffffff";
+                    GetquerySelectorAll[CoordinateSystem2D_S(GetBScreenViewHigh,GetBScreenViewWidth,startY,startX-1)-1].classList.add(`.ObjectID_${ObjectRandomNumbers}`);
+                }
+                break;
+            case 2:
+                if (GetTheObjectID(GetquerySelectorAll[CoordinateSystem2D_S(GetBScreenViewHigh,GetBScreenViewWidth,startY,startX+1)-1].className) !== ObjectRandomNumbers){
+                    sss = false;
+                    startX += 1;
+                    GetquerySelectorAll[CoordinateSystem2D_S(GetBScreenViewHigh,GetBScreenViewWidth,startY,startX+1)-1].style.background = "#ffffff";
+                    GetquerySelectorAll[CoordinateSystem2D_S(GetBScreenViewHigh,GetBScreenViewWidth,startY,startX-1)-1].classList.add(`.ObjectID_${ObjectRandomNumbers}`);
+                }
+                break;
+            case 3:
+                if (GetTheObjectID(GetquerySelectorAll[CoordinateSystem2D_S(GetBScreenViewHigh,GetBScreenViewWidth,startY,startX-1)-1].className) !== ObjectRandomNumbers){
+                    sss = false;
+                    startX -= 1;
+                    GetquerySelectorAll[CoordinateSystem2D_S(GetBScreenViewHigh,GetBScreenViewWidth,startY,startX-1)-1].style.background = "#ffffff";
+                    GetquerySelectorAll[CoordinateSystem2D_S(GetBScreenViewHigh,GetBScreenViewWidth,startY,startX-1)-1].classList.add(`.ObjectID_${ObjectRandomNumbers}`);
+                }
+                break;
+        }
+    }
+    
+    if (!sss){
+        FloodFill(startX, startY,ObjectRandomNumbers,GetBScreenViewHigh,GetBScreenViewWidth);
+    }
+}
+
+//对于任意两点，计算其十字射线的交点
+function GetCrossIntersections(p1, p2) {
+    return [
+        [p1[0], p2[1]], // p1垂直线与p2水平线交点
+        [p2[0], p1[1]]  // p1水平线与p2垂直线交点
+    ].filter(([x, y], i, arr) =>
+        // 去重：只有当两个交点不同时才都保留
+        i === 0 || (x !== arr[0][0] || y !== arr[0][1])
+    );
 }

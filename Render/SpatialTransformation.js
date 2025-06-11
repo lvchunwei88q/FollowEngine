@@ -108,6 +108,7 @@ function RotationCalculations(){//旋转计算
 
 function ConnectVertices(GetquerySelectorAll,GetDataLength,ObjectPostion,GetBScreenViewHigh,GetBScreenViewWidth,ObjectRandomNumbers
 ,AddObjectaddEventListener,F_PrintAndWriteTheObjectID){
+    let OneBresenHamLinePostion,TwoBresenHamLinePostion;
     for (let i=0;i<GetDataLength;i++){//顶点数量
         let SX,SY,EX,EY;
 
@@ -123,6 +124,8 @@ function ConnectVertices(GetquerySelectorAll,GetDataLength,ObjectPostion,GetBScr
         }
 
         let BresenHamLinePostion = BresenHamLine(SX,SY,EX,EY);
+        if (i === 0)OneBresenHamLinePostion = BresenHamLinePostion;
+        else if(i === 1)TwoBresenHamLinePostion = BresenHamLinePostion;
 
         BresenHamLinePostion.forEach((item)=>{
             let Postion = CoordinateSystem2D_S(GetBScreenViewHigh,GetBScreenViewWidth,item.y,item.x);
@@ -133,7 +136,8 @@ function ConnectVertices(GetquerySelectorAll,GetDataLength,ObjectPostion,GetBScr
             }
         });
     }
-    //ModelFilling(GetquerySelectorAll,`ObjectID_${ObjectRandomNumbers}`,GetBScreenViewWidth);
+    ModelFilling(GetquerySelectorAll,`ObjectID_${ObjectRandomNumbers}`,GetBScreenViewWidth,GetBScreenViewHigh,
+        ObjectPostion);
     
     if(AddObjectaddEventListener){
         if (F_PrintAndWriteTheObjectID)
@@ -142,7 +146,7 @@ function ConnectVertices(GetquerySelectorAll,GetDataLength,ObjectPostion,GetBScr
         }
         let BObjectLoad = JSON.parse(localStorage.getItem("EditorMoudelsLoad"));
         document.getElementById("MoudelIDArray").innerHTML += `
-              <div class="MoudelIDArrayList">MoudelID_${BObjectLoad.length+1}S:${ObjectRandomNumbers}</div>
+              <div class="MoudelIDArrayList">MoudelID_${BObjectLoad.length}S:${ObjectRandomNumbers}</div>
         `;//这里显示模型的ID
         document.querySelectorAll(`.ObjectID_${ObjectRandomNumbers}`).forEach((item)=>{
             item.addEventListener('click', ()=>{
@@ -164,19 +168,31 @@ function ConnectVertices(GetquerySelectorAll,GetDataLength,ObjectPostion,GetBScr
     }
 }
 
-function ModelFilling(GetquerySelectorAll,ClassName,GetBScreenViewWidth){
-    let OO = false,GetquerySelectorAllIDIndex = 0;
+function ModelFilling(GetquerySelectorAll,ClassName,GetBScreenViewWidth,GetBScreenViewHigh,
+                      ObjectPostion){
+    let OX,OY,TX,TY,result;
     
-    for (let i = 0; i < GetquerySelectorAll.length; i++){
-        let GetquerySelectorAllID =  GetTheObjectID(GetquerySelectorAll[i].className);
-        let Classname =  GetTheObjectID(ClassName);
-        if (GetquerySelectorAllID === Classname){
-            if (OO){
-                GetquerySelectorAllIDIndex = i - 1;
-                GetquerySelectorAllIDIndex += GetBScreenViewWidth;
+    //let Lengh = OneBresenHamLinePostion.length >= TwoBresenHamLinePostion.length ? TwoBresenHamLinePostion.length : OneBresenHamLinePostion.length;
+
+    OX = ObjectPostion[0].X;
+    OY = ObjectPostion[0].Y;
+    //这里跳一个
+    TX = ObjectPostion[2].X;
+    TY = ObjectPostion[2].Y;
+
+    let BresenHamLinePostion = BresenHamLine(OX,OY,TX,TY);
+
+    if (BresenHamLinePostion[1]){
+        let item = BresenHamLinePostion[1];//这里选择第一个
+        let Postion = CoordinateSystem2D_S(GetBScreenViewHigh,GetBScreenViewWidth,item.y,item.x);
+        if(Postion <= (GetBScreenViewHigh * GetBScreenViewWidth) && Postion !== null){
+            GetquerySelectorAll[Postion-1].style.background = "#ffffff";
+            let ObjectRandomNumbers = GetTheObjectID(ClassName);
+            if (ObjectRandomNumbers !== 0)
+            {
+                GetquerySelectorAll[Postion-1].classList.add(ClassName);
+                FloodFill(item.x,item.y,ObjectRandomNumbers,GetBScreenViewHigh,GetBScreenViewWidth,GetquerySelectorAll);
             }
-            OO = true;
         }
-        
     }
 }
