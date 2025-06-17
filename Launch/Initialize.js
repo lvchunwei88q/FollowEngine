@@ -6,7 +6,7 @@ function FInitialize(FrameLogDebug){
     bSetEngineClick = SetEngineClick();
     bInitializationParameters = InitializationParameters();
     
-    if(InitializeFrameCalculations && bSetEngineClick)
+    if(InitializeFrameCalculations && bSetEngineClick && bInitializationParameters)
         Initialize = true;
 }
 
@@ -130,6 +130,7 @@ function SetEngineClick(){
 function InitializationParameters(){
 
     localStorage.setItem("EditorMoudelsLoad", JSON.stringify(null));
+    localStorage.setItem("ObjectID", JSON.stringify(null));
     
     return true;
 }

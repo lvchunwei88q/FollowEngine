@@ -49,7 +49,7 @@ function Launch(){//启动
             }
             
             /* 在一切计算完成之后就可以开始Render了 */
-            MainRender(F_TheTimeForCalculatingFullNumberOfPixels,F_PrintAndWriteTheObjectID);
+            MainRender(F_TheTimeForCalculatingFullNumberOfPixels,F_PrintAndWriteTheObjectID,F_bFrameLog);
             
             bFrameFrameLogTick = FrameLogTick();//FrameLogTick
             

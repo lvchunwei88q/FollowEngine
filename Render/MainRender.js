@@ -1,8 +1,8 @@
 let bRenderEngineLoop = true,M_TheTimeForCalculatingFullNumberOfPixels,
-GetquerySelectorAllIndex = 0,GetquerySelectorAllForEachIndex = 0;//循环
+GetquerySelectorAllIndex = 0,GetquerySelectorAllForEachIndex = 0,RenderF_bFrameLog = false;//循环
 let GetquerySelectorAll;
 
-function MainRender(TTFFNOP,F_PrintAndWriteTheObjectID){
+function MainRender(TTFFNOP,F_PrintAndWriteTheObjectID,F_bFrameLog){
     /* 一、渲染管线的主要阶段
 1. 应用阶段（Application Stage）
 CPU端工作：
@@ -39,6 +39,7 @@ GPU端处理，将3D模型转换为屏幕空间的2D坐标：
 抗锯齿（Anti-Aliasing）：平滑边缘锯齿（如MSAA、TAA）。 */
 
     M_TheTimeForCalculatingFullNumberOfPixels = TTFFNOP;
+    RenderF_bFrameLog = F_bFrameLog;
     
     //渲染与Editor的帧计算分开进行
     if (bRenderEngineLoop){
@@ -50,19 +51,20 @@ GPU端处理，将3D模型转换为屏幕空间的2D坐标：
         }
         GetquerySelectorAllIndex++;
         
-        
         if (GetquerySelectorAllForEachIndex >= 6){
             GetquerySelectorAllForEachIndex = 0;
             GetquerySelectorAll.forEach((item)=>{
                 if (item.style.background !== "")
                     item.style.background = "#000000";
+                    item.className = 'Pixel';
+                    //item.classList.add('Pixel');
             });
         }else if(GetquerySelectorAllForEachIndex === 0){
         }
         GetquerySelectorAllForEachIndex++;
         
         
-        let bSpatialTransformation = SpatialTransformation(GetquerySelectorAll,F_PrintAndWriteTheObjectID);//第一步从模型空间转换到世界空间，从世界空间转换到视图空间
+        let bSpatialTransformation = SpatialTransformation(GetquerySelectorAll,F_PrintAndWriteTheObjectID,RenderF_bFrameLog);//第一步从模型空间转换到世界空间，从世界空间转换到视图空间
         let bRenderingPerformanceTesting = RenderingPerformanceTesting(GetquerySelectorAll,M_TheTimeForCalculatingFullNumberOfPixels);
         
         if (bSpatialTransformation && bRenderingPerformanceTesting){
@@ -71,7 +73,7 @@ GPU端处理，将3D模型转换为屏幕空间的2D坐标：
     }
 }
 
-function SpatialTransformation(GetquerySelectorAll,F_PrintAndWriteTheObjectID){
+function SpatialTransformation(GetquerySelectorAll,F_PrintAndWriteTheObjectID,RenderF_bFrameLog){
     let GetBScreenViewHigh = BScreenViewHigh;
     let GetBScreenViewWidth = BScreenViewWidth;
     
@@ -90,8 +92,15 @@ function SpatialTransformation(GetquerySelectorAll,F_PrintAndWriteTheObjectID){
         let data = JSON.parse(localStorage.getItem("EditorMoudels"));
         
         if (data !== null && data !== undefined) {
+            const CCTimeSpace2D = GetCurrentTime();
             for (let i = 1; i <= MoudelIndexall; i++) {
                 Space2D(data,GetquerySelectorAll,F_PrintAndWriteTheObjectID,i,MoudelIndexall);
+            }
+
+            const CSTimeRender = GetCurrentTime();
+            if (RenderF_bFrameLog && 0){
+                let RenderTime = CSTimeRender-CCTimeSpace2D;
+                document.getElementById("RenderTime").innerHTML = `RenderTime:${RenderTime}ms`;
             }
         }
     }

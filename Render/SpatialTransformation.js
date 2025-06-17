@@ -6,14 +6,20 @@ function Space2D(data,GetquerySelectorAll,F_PrintAndWriteTheObjectID,MoudelIndex
     //这里我们需要模糊判断坐标点的位置
     if (GetquerySelectorAll[1] !== undefined){
         let BObjectLoad = [],StopSpace2D = false,ObjectRandomNumbers = 0,AddObjectaddEventListener = false,
-            ObjectIndex = 0;
+            ObjectIndex = 0,ObjectIDs = [];
         BObjectLoad = JSON.parse(localStorage.getItem("EditorMoudelsLoad"));
+        if(JSON.parse(localStorage.getItem("ObjectID")) === null){
+            let data = []
+            localStorage.setItem("ObjectID", JSON.stringify(data));
+        }
 
         if (BObjectLoad !== null && BObjectLoad !== []) {
             //默认以第一个顶点位置为模型的判断点-》所以模型不能重合！！！
             if (BObjectLoad.length === MoudelIndexall){
                 StopSpace2D = true;
             }
+            
+            ObjectIDs = JSON.parse(localStorage.getItem("ObjectID"));
                 
             if (!StopSpace2D){//这里记录了没有加载的模型
                 let ObjectID;
@@ -35,13 +41,21 @@ function Space2D(data,GetquerySelectorAll,F_PrintAndWriteTheObjectID,MoudelIndex
                     },
                     "ObjectID":ObjectID
                 });
+                
                 ObjectRandomNumbers = ObjectID;
+                ObjectIDs.push({
+                    ObjectID : ObjectID,
+                    ObjectRenderIndex : MoudelIndex
+                });
+                localStorage.setItem("ObjectID", JSON.stringify(ObjectIDs));
                 localStorage.setItem("EditorMoudelsLoad", JSON.stringify(BObjectLoad));
+                
                 AddObjectaddEventListener = true;//开启添加绑定事件通道
                 if (F_PrintAndWriteTheObjectID)
                     console.log("已生成ObjectID随机数:"+ObjectRandomNumbers);
             }
         }else{
+            ObjectIDs = JSON.parse(localStorage.getItem("ObjectID"));
             BObjectLoad = [];
             let ObjectID = RandomNum(1,100000)//为每个模型生成单独的随机数
             BObjectLoad.push({
@@ -52,8 +66,15 @@ function Space2D(data,GetquerySelectorAll,F_PrintAndWriteTheObjectID,MoudelIndex
                 },
                 "ObjectID":ObjectID
             });
+            
             localStorage.setItem("EditorMoudelsLoad", JSON.stringify(BObjectLoad));
             ObjectRandomNumbers = ObjectID;
+            ObjectIDs.push({
+                ObjectID : ObjectID,
+                ObjectRenderIndex : MoudelIndex
+            });
+            localStorage.setItem("ObjectID", JSON.stringify(ObjectIDs));
+            
             AddObjectaddEventListener = true;//开启添加绑定事件通道
             
             if (F_PrintAndWriteTheObjectID)
@@ -89,13 +110,23 @@ function Space2D(data,GetquerySelectorAll,F_PrintAndWriteTheObjectID,MoudelIndex
             let Postion = CoordinateSystem2D_S(GetBScreenViewHigh,GetBScreenViewWidth,Y,X);
             
             if(Postion <= (GetBScreenViewHigh * GetBScreenViewWidth) && Postion !== null){
+                if (ObjectRandomNumbers === 0){
+                    let DataObjectID = JSON.parse(localStorage.getItem("ObjectID"));
+                    DataObjectID.forEach(item=>{//这里如果只有判断GetTheObjectID(GetquerySelectorAll[Postion-1].className)的话是不够的所以加上模型的绘制顺序
+                        if (item.ObjectID === GetTheObjectID(GetquerySelectorAll[Postion-1].className) ||
+                            item.ObjectRenderIndex === ObjectIndex+1){
+                            ObjectRandomNumbers = item.ObjectID;
+                        }
+                    });
+                }
                 GetquerySelectorAll[Postion-1].style.background = "#ffffff";
-                if (ObjectRandomNumbers !== 0)
+                if (ObjectRandomNumbers !== GetTheObjectID(GetquerySelectorAll[Postion-1].className))
                     GetquerySelectorAll[Postion-1].classList.add(`ObjectID_${ObjectRandomNumbers}`);
                 //else console.error("Error!ObjectRandomNumbers = 0");
             }
         }
         
+        if (ObjectRandomNumbers !== 0)
         ConnectVertices(GetquerySelectorAll,GetDataLength,ObjectPostion,GetBScreenViewHigh,GetBScreenViewWidth,ObjectRandomNumbers
         ,AddObjectaddEventListener,F_PrintAndWriteTheObjectID);
  
@@ -191,7 +222,12 @@ function ModelFilling(GetquerySelectorAll,ClassName,GetBScreenViewWidth,GetBScre
             if (ObjectRandomNumbers !== 0)
             {
                 GetquerySelectorAll[Postion-1].classList.add(ClassName);
-                FloodFill(item.x,item.y,ObjectRandomNumbers,GetBScreenViewHigh,GetBScreenViewWidth,GetquerySelectorAll);
+                if (0){
+                    //alert();
+                    let a = 5;
+                }//算法都会因为移动过于快导致的问题
+                //FloodFill(item.x,item.y,ObjectRandomNumbers,GetBScreenViewHigh,GetBScreenViewWidth,GetquerySelectorAll);
+                FloodFill_For(item.x,item.y,ObjectRandomNumbers,GetBScreenViewHigh,GetBScreenViewWidth,GetquerySelectorAll);
             }
         }
     }

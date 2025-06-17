@@ -10,3 +10,4 @@ let Initialize = false;
 let ObjectClassName = null;
 //占时使用MoudelIndexall代替
 const MoudelIndexall = 2;//MoudelIndex
+//还是需要一定的调整
