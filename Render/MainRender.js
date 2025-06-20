@@ -1,8 +1,9 @@
-let bRenderEngineLoop = true,M_TheTimeForCalculatingFullNumberOfPixels,
-GetquerySelectorAllIndex = 0,GetquerySelectorAllForEachIndex = 0,RenderF_bFrameLog = false;//循环
+let bRenderEngineLoop = true, M_TheTimeForCalculatingFullNumberOfPixels,
+    GetquerySelectorAllIndex = 0, GetquerySelectorAllForEachIndex = 0, RenderF_bFrameLog = false;//循环
 let GetquerySelectorAll;
 
-function MainRender(TTFFNOP,F_PrintAndWriteTheObjectID,F_bFrameLog){
+function MainRender(TTFFNOP, F_PrintAndWriteTheObjectID, F_bFrameLog,
+                    E_bRenderPaddingBate) {
     /* 一、渲染管线的主要阶段
 1. 应用阶段（Application Stage）
 CPU端工作：
@@ -40,108 +41,126 @@ GPU端处理，将3D模型转换为屏幕空间的2D坐标：
 
     M_TheTimeForCalculatingFullNumberOfPixels = TTFFNOP;
     RenderF_bFrameLog = F_bFrameLog;
-    
+
     //渲染与Editor的帧计算分开进行
-    if (bRenderEngineLoop){
-        if (GetquerySelectorAllIndex >=16){
+    if (bRenderEngineLoop) {
+        if (GetquerySelectorAllIndex >= 16) {
             GetquerySelectorAllIndex = 0;
             GetquerySelectorAll = document.querySelectorAll(".Pixel");
-        }else if (GetquerySelectorAllIndex === 0){
+        } else if (GetquerySelectorAllIndex === 0) {
             GetquerySelectorAll = document.querySelectorAll(".Pixel");
         }
         GetquerySelectorAllIndex++;
-        
-        if (GetquerySelectorAllForEachIndex >= 6){
+
+        if (GetquerySelectorAllForEachIndex >= 6) {
             GetquerySelectorAllForEachIndex = 0;
-            GetquerySelectorAll.forEach((item)=>{
+            GetquerySelectorAll.forEach((item) => {
                 if (item.style.background !== "")
                     item.style.background = "#000000";
-                    item.className = 'Pixel';
-                    //item.classList.add('Pixel');
+                item.className = 'Pixel';
+                //item.classList.add('Pixel');
             });
-        }else if(GetquerySelectorAllForEachIndex === 0){
+        } else if (GetquerySelectorAllForEachIndex === 0) {
         }
         GetquerySelectorAllForEachIndex++;
-        
-        
-        let bSpatialTransformation = SpatialTransformation(GetquerySelectorAll,F_PrintAndWriteTheObjectID,RenderF_bFrameLog);//第一步从模型空间转换到世界空间，从世界空间转换到视图空间
-        let bRenderingPerformanceTesting = RenderingPerformanceTesting(GetquerySelectorAll,M_TheTimeForCalculatingFullNumberOfPixels);
-        
-        if (bSpatialTransformation && bRenderingPerformanceTesting){
+
+
+        let bSpatialTransformation = SpatialTransformation(GetquerySelectorAll, F_PrintAndWriteTheObjectID, RenderF_bFrameLog,
+            E_bRenderPaddingBate);//第一步从模型空间转换到世界空间，从世界空间转换到视图空间
+        let bRenderingPerformanceTesting = RenderingPerformanceTesting(GetquerySelectorAll, M_TheTimeForCalculatingFullNumberOfPixels);
+
+        if (bSpatialTransformation && bRenderingPerformanceTesting) {
             bRenderEngineLoop = true;
         }
     }
 }
 
-function SpatialTransformation(GetquerySelectorAll,F_PrintAndWriteTheObjectID,RenderF_bFrameLog){
+function SpatialTransformation(GetquerySelectorAll, F_PrintAndWriteTheObjectID, RenderF_bFrameLog,
+                               E_bRenderPaddingBate) {
     let GetBScreenViewHigh = BScreenViewHigh;
     let GetBScreenViewWidth = BScreenViewWidth;
-    
-    if(GetBScreenViewHigh !== 0 && GetBScreenViewWidth !== 0){
-        if (!JSON.parse(localStorage.getItem("EditorMoudels"))){
-            //GetJSON
-            ReadJSON_Editor("Moudels/Cube.json")
-                .then(data => {
-                    localStorage.setItem("EditorMoudels", JSON.stringify(data));
-                })
-                .catch(err => {
-                    console.error("失败:", err);
-                });
+
+    if (GetBScreenViewHigh !== 0 && GetBScreenViewWidth !== 0) {
+        let data,UserData;
+        if (MoudelIndexall !== 0){
+            if (!JSON.parse(localStorage.getItem("EditorMoudels"))) {
+                //GetJSON
+                ReadJSON_Editor("Moudels/Cube.json")
+                    .then(data => {
+                        localStorage.setItem("EditorMoudels", JSON.stringify(data));
+                    })
+                    .catch(err => {
+                        console.error("失败:", err);
+                    });
+            }
+
+            data = JSON.parse(localStorage.getItem("EditorMoudels"));
+            
+        }else if(UserMoudelIndexall !== 0){
+            UserData = JSON.parse(localStorage.getItem("UserMoudels"));
         }
-        
-        let data = JSON.parse(localStorage.getItem("EditorMoudels"));
-        
+
+
         if (data !== null && data !== undefined) {
             const CCTimeSpace2D = GetCurrentTime();
             for (let i = 1; i <= MoudelIndexall; i++) {
-                Space2D(data,GetquerySelectorAll,F_PrintAndWriteTheObjectID,i,MoudelIndexall);
+                Space2D(data, GetquerySelectorAll, F_PrintAndWriteTheObjectID, i, MoudelIndexall,
+                    E_bRenderPaddingBate);//这个时Editor模型使用的
             }
 
             const CSTimeRender = GetCurrentTime();
-            if (RenderF_bFrameLog && 0){
-                let RenderTime = CSTimeRender-CCTimeSpace2D;
+            if (RenderF_bFrameLog && 0) {
+                let RenderTime = CSTimeRender - CCTimeSpace2D;
                 document.getElementById("RenderTime").innerHTML = `RenderTime:${RenderTime}ms`;
+            }
+        }
+        
+        if (UserData !== null && UserData !== undefined){
+            
+            for (let i = 1; i <= UserMoudelIndexall; i++) {//这个用户模型使用
+                Space2D_User(data, GetquerySelectorAll, F_PrintAndWriteTheObjectID, i, UserMoudelIndexall,
+                    E_bRenderPaddingBate);//这个时Editor模型使用的
             }
         }
     }
     return true;
 }
 
-function RenderingPerformanceTesting(GetquerySelectorAll,M_TheTimeForCalculatingFullNumberOfPixels){
-    if (!M_TheTimeForCalculatingFullNumberOfPixels)return true;
-    
+function RenderingPerformanceTesting(GetquerySelectorAll, M_TheTimeForCalculatingFullNumberOfPixels) {
+    if (!M_TheTimeForCalculatingFullNumberOfPixels) return true;
+
     let GetBScreenViewHigh = JSON.parse(localStorage.getItem("ScreenViewHighPixel"));
     let GetBScreenViewWidth = JSON.parse(localStorage.getItem("ScreenViewWidthPixel"));
-    let X = 0,Y = 1;
+    let X = 0, Y = 1;
     const CCTime = GetCurrentTime();
-    
-    if (GetquerySelectorAll[1] !== undefined){
+
+    if (GetquerySelectorAll[1] !== undefined) {
         let ForIndex = GetBScreenViewHigh * GetBScreenViewWidth;
-        for(let i = 0; i < ForIndex; i++){
-            let Postion = CoordinateSystem2D_S(GetBScreenViewHigh,GetBScreenViewWidth,Y,X);
+        for (let i = 0; i < ForIndex; i++) {
+            let Postion = CoordinateSystem2D_S(GetBScreenViewHigh, GetBScreenViewWidth, Y, X);
 
             let rgb = [];
 
             rgb.push({
-                "r" :RandomNum(1,255),
-                "g" :RandomNum(1,255),
-                "b" :RandomNum(1,255)
+                "r": RandomNum(1, 255),
+                "g": RandomNum(1, 255),
+                "b": RandomNum(1, 255)
             });
 
-            if(Postion !== null){
+            if (Postion !== null) {
                 GetquerySelectorAll[Postion].style.background = `rgb(${rgb[0].r},${rgb[0].g},${rgb[0].b})`;
             }
             X++;
-            if (X > GetBScreenViewWidth){
+            if (X > GetBScreenViewWidth) {
                 Y++;
                 X = 0;
             }
         }
     }
-    
+
     const CSTime = GetCurrentTime();
-    let Time = CSTime-CCTime;
-    console.log("全像素计算耗时:"+Time+"ms");
+    let Time = CSTime - CCTime;
+    console.log("全像素计算耗时:" + Time + "ms");
 
     return true;
 }

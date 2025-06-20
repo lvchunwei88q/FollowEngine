@@ -1,6 +1,6 @@
 [
   {
-    "CalculatePercentageDebug" : false
+    "CalculatePercentageDebug": false
   },
   {
     "FrameLog": true
@@ -12,6 +12,6 @@
     "TheTimeForCalculatingFullNumberOfPixels": false
   },
   {
-    "PrintAndWriteTheObjectID": true
+    "PrintAndWriteTheObjectID": false
   }
 ]

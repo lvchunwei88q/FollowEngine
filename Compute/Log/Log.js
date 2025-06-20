@@ -37,7 +37,7 @@ function ShowToast(message, type = 'success', duration = 3000) {
     // 添加进度条
     const progressBar = document.createElement('div');
     progressBar.className = 'toast-progress';
-    progressBar.style.animationDuration = `${duration/1000}s`;
+    progressBar.style.animationDuration = `${duration / 1000}s`;
     toast.appendChild(progressBar);
 
     // 添加到容器
@@ -82,9 +82,9 @@ function removeToast(toast) {
     }, 500);
 }
 
-function GetCurrentTime(){
+function GetCurrentTime() {
     const time = performance.now();  // 返回自页面加载以来的毫秒数（浮点数）
     const milliseconds = Math.floor(time % 1000);
-    
+
     return milliseconds;//GetgetMilliseconds
 }

@@ -2,7 +2,7 @@ function ReadJSON_Editor(URL) {
     return new Promise((resolve, reject) => {
         let xhr = new XMLHttpRequest();
         xhr.open("GET", `../Content/${URL}`, true);
-        xhr.onload = function() {
+        xhr.onload = function () {
             if (xhr.status === 200) {
                 try {
                     let data = JSON.parse(xhr.responseText);
@@ -24,7 +24,7 @@ function ReadJSON_User(URL) {
     return new Promise((resolve, reject) => {
         let xhr = new XMLHttpRequest();
         xhr.open("GET", URL, true);
-        xhr.onload = function() {
+        xhr.onload = function () {
             if (xhr.status === 200) {
                 try {
                     let data = JSON.parse(xhr.responseText);
@@ -55,7 +55,7 @@ function DownloadJson(data, filename, prettyPrint = false) {
         : JSON.stringify(data);
 
     // 创建Blob对象
-    const blob = new Blob([jsonString], { type: 'application/json' });
+    const blob = new Blob([jsonString], {type: 'application/json'});
 
     // 创建下载链接
     const url = URL.createObjectURL(blob);
