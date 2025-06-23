@@ -8,18 +8,21 @@ function ProjectManagement(Url) {
     let MoudelIndexUrl = `/Moudels/MoudelIndex.json`;
     let UserMoudelUrl = `/Moudels/UserMoudel.json`;
     //Let
-    let MoudelIndex = 0;
+    //let MoudelIndex = 0;
     //Bool
     let UserIndexBool = false;
     
+    //这里需要先清空原有的MoudelID
+    localStorage.setItem("EditorMoudelsLoad",JSON.stringify(null));
+    document.getElementById("MoudelIDArray").innerHTML = "";
 
     ReadJSON_User(Base_Url + MoudelIndexUrl)
         .then(data => {
             UserIndexBool = true;
             console.log("读取用户JSON-模型Index:"+data.MoudelIndex);
-            MoudelIndex = 0;
             MoudelIndexall = 0;//停止引擎自带的moudel
-            UserMoudelIndexall = MoudelIndex;
+            localStorage.setItem("UserMoudelIndexall",JSON.stringify(data.MoudelIndex));
+            //UserMoudelIndexall = data.MoudelIndex;
         })
         .catch(err => {
             console.error("用户模型Index失败:", err);

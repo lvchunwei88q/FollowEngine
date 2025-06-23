@@ -42,6 +42,8 @@ GPU端处理，将3D模型转换为屏幕空间的2D坐标：
     M_TheTimeForCalculatingFullNumberOfPixels = TTFFNOP;
     RenderF_bFrameLog = F_bFrameLog;
 
+    UserMoudelIndexall = JSON.parse(localStorage.getItem("UserMoudelIndexall"));
+
     //渲染与Editor的帧计算分开进行
     if (bRenderEngineLoop) {
         if (GetquerySelectorAllIndex >= 16) {
@@ -118,7 +120,7 @@ function SpatialTransformation(GetquerySelectorAll, F_PrintAndWriteTheObjectID, 
         if (UserData !== null && UserData !== undefined){
             
             for (let i = 1; i <= UserMoudelIndexall; i++) {//这个用户模型使用
-                Space2D_User(data, GetquerySelectorAll, F_PrintAndWriteTheObjectID, i, UserMoudelIndexall,
+                Space2D_User(UserData, GetquerySelectorAll, F_PrintAndWriteTheObjectID, i, UserMoudelIndexall,
                     E_bRenderPaddingBate);//这个时Editor模型使用的
             }
         }

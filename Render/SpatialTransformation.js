@@ -1,13 +1,13 @@
 /* 加入模型以及旋转 */
 
-function Space2D_User(data, GetquerySelectorAll, F_PrintAndWriteTheObjectID, MoudelIndex, MoudelIndexall,
+function Space2D_User(data, GetquerySelectorAll, F_PrintAndWriteTheObjectID, S_MoudelIndex, UserMoudelIndexall,
                       E_bRenderPaddingBate){
     
-    Space2D(data, GetquerySelectorAll, F_PrintAndWriteTheObjectID, MoudelIndex, MoudelIndexall,
+    Space2D(data, GetquerySelectorAll, F_PrintAndWriteTheObjectID, S_MoudelIndex, UserMoudelIndexall,
                      E_bRenderPaddingBate);
 }
 
-function Space2D(data, GetquerySelectorAll, F_PrintAndWriteTheObjectID, MoudelIndex, MoudelIndexall,
+function Space2D(data, GetquerySelectorAll, F_PrintAndWriteTheObjectID, S_MoudelIndex, S_MoudelIndexall,
                  E_bRenderPaddingBate) {
     //const OPostion = [];//偏移位置
     //这里需要注意Moudel的顶点位置需要对应绘制顺序
@@ -24,8 +24,10 @@ function Space2D(data, GetquerySelectorAll, F_PrintAndWriteTheObjectID, MoudelIn
 
         if (BObjectLoad !== null && BObjectLoad !== []) {
             //默认以第一个顶点位置为模型的判断点-》所以模型不能重合！！！
-            if (BObjectLoad.length === MoudelIndexall) {
+            if (BObjectLoad.length === S_MoudelIndexall) {
                 StopSpace2D = true;
+            }else if(BObjectLoad.length >= S_MoudelIndexall){
+                console.error("错误的长度ObjectLoad:"+BObjectLoad.length+"-MoudelIndexall:"+S_MoudelIndexall);
             }
 
             ObjectIDs = JSON.parse(localStorage.getItem("ObjectID"));
@@ -54,7 +56,7 @@ function Space2D(data, GetquerySelectorAll, F_PrintAndWriteTheObjectID, MoudelIn
                 ObjectRandomNumbers = ObjectID;
                 ObjectIDs.push({
                     ObjectID: ObjectID,
-                    ObjectRenderIndex: MoudelIndex
+                    ObjectRenderIndex: S_MoudelIndex
                 });
                 localStorage.setItem("ObjectID", JSON.stringify(ObjectIDs));
                 localStorage.setItem("EditorMoudelsLoad", JSON.stringify(BObjectLoad));
@@ -80,7 +82,7 @@ function Space2D(data, GetquerySelectorAll, F_PrintAndWriteTheObjectID, MoudelIn
             ObjectRandomNumbers = ObjectID;
             ObjectIDs.push({
                 ObjectID: ObjectID,
-                ObjectRenderIndex: MoudelIndex
+                ObjectRenderIndex: S_MoudelIndex
             });
             localStorage.setItem("ObjectID", JSON.stringify(ObjectIDs));
 
@@ -90,7 +92,7 @@ function Space2D(data, GetquerySelectorAll, F_PrintAndWriteTheObjectID, MoudelIn
                 console.log("已生成ObjectID随机数:" + ObjectRandomNumbers);
         }
 
-        ObjectIndex = MoudelIndex - 1;
+        ObjectIndex = S_MoudelIndex - 1;
         let GetBScreenViewHigh = JSON.parse(localStorage.getItem("ScreenViewHighPixel"));
         let GetBScreenViewWidth = JSON.parse(localStorage.getItem("ScreenViewWidthPixel"));
 
