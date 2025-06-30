@@ -140,6 +140,12 @@ function InitializationParameters() {
 
     localStorage.setItem("EditorMoudelsLoad", JSON.stringify(null));
     localStorage.setItem("ObjectID", JSON.stringify(null));
+    localStorage.setItem("UserMoudelIndexall",JSON.stringify(0));//默认一个
+    localStorage.setItem("TheNumberOfModelSegments",JSON.stringify(null));
+    localStorage.setItem("ModelSegmentationArray",JSON.stringify(null));
+    localStorage.setItem("IUColor",JSON.stringify(`rgba(255,255,255,1)`));
+    //这里加入一个锁来阻断过快加载用户模型
+    localStorage.setItem("UserProjectLoading",JSON.stringify(false));
 
     return true;
 }

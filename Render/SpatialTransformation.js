@@ -1,14 +1,16 @@
 /* 加入模型以及旋转 */
 
 function Space2D_User(data, GetquerySelectorAll, F_PrintAndWriteTheObjectID, S_MoudelIndex, UserMoudelIndexall,
-                      E_bRenderPaddingBate){
+                      E_bRenderPaddingBate,IU_Color){
+    //let U_Color = `rgba(255,255,255,1)`;
+    //console.log(UserMoudelIndexall);
     
     Space2D(data, GetquerySelectorAll, F_PrintAndWriteTheObjectID, S_MoudelIndex, UserMoudelIndexall,
-                     E_bRenderPaddingBate);
+                     E_bRenderPaddingBate,IU_Color);
 }
 
 function Space2D(data, GetquerySelectorAll, F_PrintAndWriteTheObjectID, S_MoudelIndex, S_MoudelIndexall,
-                 E_bRenderPaddingBate) {
+                 E_bRenderPaddingBate,U_Color = `rgba(255,255,255,1)`) {
     //const OPostion = [];//偏移位置
     //这里需要注意Moudel的顶点位置需要对应绘制顺序
 
@@ -18,8 +20,8 @@ function Space2D(data, GetquerySelectorAll, F_PrintAndWriteTheObjectID, S_Moudel
             ObjectIndex = 0, ObjectIDs = [];
         BObjectLoad = JSON.parse(localStorage.getItem("EditorMoudelsLoad"));
         if (JSON.parse(localStorage.getItem("ObjectID")) === null) {
-            let data = []
-            localStorage.setItem("ObjectID", JSON.stringify(data));
+            let sdata = []
+            localStorage.setItem("ObjectID", JSON.stringify(sdata));
         }
 
         if (BObjectLoad !== null && BObjectLoad !== []) {
@@ -28,6 +30,7 @@ function Space2D(data, GetquerySelectorAll, F_PrintAndWriteTheObjectID, S_Moudel
                 StopSpace2D = true;
             }else if(BObjectLoad.length >= S_MoudelIndexall){
                 console.error("错误的长度ObjectLoad:"+BObjectLoad.length+"-MoudelIndexall:"+S_MoudelIndexall);
+                StopSpace2D = true;//不要在加了
             }
 
             ObjectIDs = JSON.parse(localStorage.getItem("ObjectID"));
@@ -61,6 +64,7 @@ function Space2D(data, GetquerySelectorAll, F_PrintAndWriteTheObjectID, S_Moudel
                 localStorage.setItem("ObjectID", JSON.stringify(ObjectIDs));
                 localStorage.setItem("EditorMoudelsLoad", JSON.stringify(BObjectLoad));
 
+                //console.log("绑定开启");
                 AddObjectaddEventListener = true;//开启添加绑定事件通道
                 if (F_PrintAndWriteTheObjectID)
                     console.log("已生成ObjectID随机数:" + ObjectRandomNumbers);
@@ -86,6 +90,7 @@ function Space2D(data, GetquerySelectorAll, F_PrintAndWriteTheObjectID, S_Moudel
             });
             localStorage.setItem("ObjectID", JSON.stringify(ObjectIDs));
 
+            //console.log("绑定开启");
             AddObjectaddEventListener = true;//开启添加绑定事件通道
 
             if (F_PrintAndWriteTheObjectID)
@@ -130,26 +135,75 @@ function Space2D(data, GetquerySelectorAll, F_PrintAndWriteTheObjectID, S_Moudel
                         }
                     });
                 }
-                GetquerySelectorAll[Postion - 1].style.background = "#ffffff";
+                GetquerySelectorAll[Postion - 1].style.background = U_Color;
                 if (ObjectRandomNumbers !== GetTheObjectID(GetquerySelectorAll[Postion - 1].className))
                     GetquerySelectorAll[Postion - 1].classList.add(`ObjectID_${ObjectRandomNumbers}`);
                 //else console.error("Error!ObjectRandomNumbers = 0");
             }
         }
 
-        if (ObjectRandomNumbers !== 0)
-            ConnectVertices(GetquerySelectorAll, GetDataLength, ObjectPostion, GetBScreenViewHigh, GetBScreenViewWidth, ObjectRandomNumbers
-                , AddObjectaddEventListener, F_PrintAndWriteTheObjectID, E_bRenderPaddingBate);
+        if (ObjectRandomNumbers !== 0)//这里需要对模型进行分段-GetDataLength是顶点数量
+        {
+            let TheNumberOfModelSegments = JSON.parse(localStorage.getItem("TheNumberOfModelSegments"));
+            let ModelSegmentationArray = JSON.parse(localStorage.getItem("ModelSegmentationArray"));
+            if(TheNumberOfModelSegments !== null && ModelSegmentationArray !== null && TheNumberOfModelSegments > 1){
+                for (let x=0;x < TheNumberOfModelSegments;x++){
+                    let TempObjectPostion = [],ModelSegmentationArraylength = 0;
+                    for (let y=0;y<ModelSegmentationArray[x];y++){
+                        for (let z=0;z<x;z++){
+                            ModelSegmentationArraylength += ModelSegmentationArray[z];
+                        }
+                        if (ObjectPostion[y+ModelSegmentationArraylength] === undefined){
+                            console.error("ModelSegmentationArraylength:"+ModelSegmentationArraylength+"-ObjectPostion:"+S_MoudelIndexall);
+                        }
+                        TempObjectPostion.push({
+                            "X": ObjectPostion[y+ModelSegmentationArraylength].X,
+                            "Y": ObjectPostion[y+ModelSegmentationArraylength].Y,
+                        });
+                        ModelSegmentationArraylength = 0;//这里需要重置为0
+                    }
+                    ConnectVertices(GetquerySelectorAll, ModelSegmentationArray[x], TempObjectPostion, GetBScreenViewHigh, GetBScreenViewWidth, ObjectRandomNumbers
+                        , F_PrintAndWriteTheObjectID, E_bRenderPaddingBate,U_Color);
+                }
+            }else ConnectVertices(GetquerySelectorAll, GetDataLength, ObjectPostion, GetBScreenViewHigh, GetBScreenViewWidth, ObjectRandomNumbers
+                , F_PrintAndWriteTheObjectID, E_bRenderPaddingBate,U_Color);
 
+        }
+        if (AddObjectaddEventListener) {
+            if (F_PrintAndWriteTheObjectID) {
+                console.log("绑定:" + `ObjectID_${ObjectRandomNumbers}`);
+            }
+            let BObjectLoad = JSON.parse(localStorage.getItem("EditorMoudelsLoad"));
+            document.getElementById("MoudelIDArray").innerHTML += `
+              <div class="MoudelIDArrayList">MoudelID_${BObjectLoad.length}S:${ObjectRandomNumbers}</div>
+        `;//这里显示模型的ID
+            document.querySelectorAll(`.ObjectID_${ObjectRandomNumbers}`).forEach((item) => {
+                item.addEventListener('click', () => {
+                    //这里写绑定之类的操作
+                    ObjectClassName = item.className;
+                    console.log("已经选择:" + ObjectClassName);
+
+                    let BObjectLoad = JSON.parse(localStorage.getItem("EditorMoudelsLoad"));
+                    let GetObjectID = GetTheObjectID(ObjectClassName);//赋值给InputY，X
+
+                    for (let i = 1; i <= BObjectLoad.length; i++) {
+                        if (BObjectLoad[i - 1].ObjectID === GetObjectID) {
+                            document.getElementById("InputY").value = BObjectLoad[i - 1].MoudelPostion.Y;
+                            document.getElementById("InputX").value = BObjectLoad[i - 1].MoudelPostion.X;
+                        }
+                    }
+                });
+            });
+        }
     }
 }
 
 function RotationCalculations() {//旋转计算
-
+    
 }
 
 function ConnectVertices(GetquerySelectorAll, GetDataLength, ObjectPostion, GetBScreenViewHigh, GetBScreenViewWidth, ObjectRandomNumbers
-    , AddObjectaddEventListener, F_PrintAndWriteTheObjectID, E_bRenderPaddingBate) {
+    , F_PrintAndWriteTheObjectID, E_bRenderPaddingBate,U_Color) {
     let OneBresenHamLinePostion, TwoBresenHamLinePostion;
     for (let i = 0; i < GetDataLength; i++) {//顶点数量
         let SX, SY, EX, EY;
@@ -171,7 +225,7 @@ function ConnectVertices(GetquerySelectorAll, GetDataLength, ObjectPostion, GetB
         BresenHamLinePostion.forEach((item) => {
             let Postion = CoordinateSystem2D_S(GetBScreenViewHigh, GetBScreenViewWidth, item.y, item.x);
             if (Postion <= (GetBScreenViewHigh * GetBScreenViewWidth) && Postion !== null) {
-                GetquerySelectorAll[Postion - 1].style.background = "#ffffff";
+                GetquerySelectorAll[Postion - 1].style.background = U_Color;
                 if (ObjectRandomNumbers !== 0)
                     GetquerySelectorAll[Postion - 1].classList.add(`ObjectID_${ObjectRandomNumbers}`);
             }
@@ -180,33 +234,6 @@ function ConnectVertices(GetquerySelectorAll, GetDataLength, ObjectPostion, GetB
     if (E_bRenderPaddingBate)
         ModelFilling(GetquerySelectorAll, `ObjectID_${ObjectRandomNumbers}`, GetBScreenViewWidth, GetBScreenViewHigh,
             ObjectPostion);
-
-    if (AddObjectaddEventListener) {
-        if (F_PrintAndWriteTheObjectID) {
-            console.log("绑定:" + `ObjectID_${ObjectRandomNumbers}`);
-        }
-        let BObjectLoad = JSON.parse(localStorage.getItem("EditorMoudelsLoad"));
-        document.getElementById("MoudelIDArray").innerHTML += `
-              <div class="MoudelIDArrayList">MoudelID_${BObjectLoad.length}S:${ObjectRandomNumbers}</div>
-        `;//这里显示模型的ID
-        document.querySelectorAll(`.ObjectID_${ObjectRandomNumbers}`).forEach((item) => {
-            item.addEventListener('click', () => {
-                //这里写绑定之类的操作
-                ObjectClassName = item.className;
-                console.log("已经选择:" + ObjectClassName);
-
-                let BObjectLoad = JSON.parse(localStorage.getItem("EditorMoudelsLoad"));
-                let GetObjectID = GetTheObjectID(ObjectClassName);//赋值给InputY，X
-
-                for (let i = 1; i <= BObjectLoad.length; i++) {
-                    if (BObjectLoad[i - 1].ObjectID === GetObjectID) {
-                        document.getElementById("InputY").value = BObjectLoad[i - 1].MoudelPostion.Y;
-                        document.getElementById("InputX").value = BObjectLoad[i - 1].MoudelPostion.X;
-                    }
-                }
-            });
-        });
-    }
 }
 
 function ModelFilling(GetquerySelectorAll, ClassName, GetBScreenViewWidth, GetBScreenViewHigh,

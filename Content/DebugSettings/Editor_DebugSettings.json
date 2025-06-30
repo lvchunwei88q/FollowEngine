@@ -12,6 +12,6 @@
     "TheTimeForCalculatingFullNumberOfPixels": false
   },
   {
-    "PrintAndWriteTheObjectID": false
+    "PrintAndWriteTheObjectID": true
   }
 ]

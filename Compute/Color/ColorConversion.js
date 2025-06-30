@@ -1,3 +1,4 @@
+//颜色转换
 function ConvertHexToRGBA(hex) { //颜色转换 -> HexToRGBA
 
     // 去除 # 号，处理简写形式（如 "F00" 转为 "FF0000"）
