@@ -1,4 +1,4 @@
-let bRenderEngineLoop = true, M_TheTimeForCalculatingFullNumberOfPixels,
+let bRenderEngineLoop = true, M_TheTimeForCalculatingFullNumberOfPixels,GShaderLoop = false,
     GetquerySelectorAllIndex = 0, GetquerySelectorAllForEachIndex = 0, RenderF_bFrameLog = false;//循环
 let GetquerySelectorAll;
 
@@ -64,12 +64,15 @@ GPU端处理，将3D模型转换为屏幕空间的2D坐标：
         }
         GetquerySelectorAllForEachIndex++;
 
-
         let bSpatialTransformation = SpatialTransformation(GetquerySelectorAll, F_PrintAndWriteTheObjectID, RenderF_bFrameLog,
-            E_bRenderPaddingBate);//第一步从模型空间转换到世界空间，从世界空间转换到视图空间
+                E_bRenderPaddingBate);//第一步从模型空间转换到世界空间，从世界空间转换到视图空间
+        
         let bRenderingPerformanceTesting = RenderingPerformanceTesting(GetquerySelectorAll, M_TheTimeForCalculatingFullNumberOfPixels);
 
-        if (bSpatialTransformation && bRenderingPerformanceTesting) {
+        //接下来就是计算着色器了
+        GShaderLoop = ShaderLoop(GetquerySelectorAll);
+
+        if (bSpatialTransformation && bRenderingPerformanceTesting && GShaderLoop) {
             bRenderEngineLoop = true;
         }
     }

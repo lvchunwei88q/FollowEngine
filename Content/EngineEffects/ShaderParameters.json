@@ -1,0 +1,9 @@
+{
+  "ShaderCalculations": true,
+  "ToneMap": {
+    "Exposure" : 5,
+    "Contrast" : 100,
+    "Saturation" : 100,
+    "DownSampleScale" : 0.8
+  }
+}

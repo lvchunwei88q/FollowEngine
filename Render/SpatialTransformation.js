@@ -182,6 +182,7 @@ function Space2D(data, GetquerySelectorAll, F_PrintAndWriteTheObjectID, S_Moudel
                     //这里写绑定之类的操作
                     ObjectClassName = item.className;
                     console.log("已经选择:" + ObjectClassName);
+                    ShowToast("已经选择:" + ObjectClassName);
 
                     let BObjectLoad = JSON.parse(localStorage.getItem("EditorMoudelsLoad"));
                     let GetObjectID = GetTheObjectID(ObjectClassName);//赋值给InputY，X

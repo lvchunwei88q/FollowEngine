@@ -5,8 +5,11 @@ function FInitialize(FrameLogDebug) {
 
     bSetEngineClick = SetEngineClick();
     bInitializationParameters = InitializationParameters();
+    let ShaderJSONLoop = ReadJSON_Shader();
+    let Shaderglobalparameters = ShaderGlobalParameters();
 
-    if (InitializeFrameCalculations && bSetEngineClick && bInitializationParameters)
+    if (InitializeFrameCalculations && bSetEngineClick && bInitializationParameters
+    && ShaderJSONLoop && Shaderglobalparameters)
         Initialize = true;
 }
 
