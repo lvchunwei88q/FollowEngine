@@ -144,7 +144,8 @@ function SpatialTransformation(GetquerySelectorAll, F_PrintAndWriteTheObjectID,
         }
 
 
-        if (data !== null && data !== undefined && (UserMoudelIndexall === 0 || UserMoudelIndexall == null)) {
+        if (data !== null && data !== undefined && (UserMoudelIndexall === 0 || UserMoudelIndexall == null)
+        && JSON.parse(localStorage.getItem("EditorRenderView"))) {
             
             for (let i = 1; i <= MoudelIndexall; i++) {
                 Space2D(data, GetquerySelectorAll, F_PrintAndWriteTheObjectID, i, MoudelIndexall,
@@ -153,10 +154,29 @@ function SpatialTransformation(GetquerySelectorAll, F_PrintAndWriteTheObjectID,
         }
         
         if (UserData !== null && UserData !== undefined && JSON.parse(localStorage.getItem("UserProjectLoading"))){
-            let IU_Color = JSON.parse(localStorage.getItem("IUColor"));
+            let IU_Color = JSON.parse(localStorage.getItem("IUColor"));//默认颜色
+            //要支持多用户模型的化可以在这里做文章UserData
+            /*
+            [
+               [
+                 [].....
+                 {
+                 id:..
+                 }
+               ]
+               [
+                 [].....
+                 {
+                 id:..
+                 }
+               ]
+            ] 理想的用户模型文件
+             */
+            //UserMoudelIndexall表示用户模型的数量
             
                 for (let i = 1; i <= UserMoudelIndexall; i++) {//这个用户模型使用
-                Space2D_User(UserData, GetquerySelectorAll, F_PrintAndWriteTheObjectID, i, UserMoudelIndexall,
+                    let UserDatas = UserData[i-1];
+                Space2D_User(UserDatas, GetquerySelectorAll, F_PrintAndWriteTheObjectID, i, UserMoudelIndexall,
                     E_bRenderPaddingBate,IU_Color);//这个时Editor模型使用的
             }
         }

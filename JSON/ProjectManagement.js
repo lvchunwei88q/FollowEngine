@@ -1,13 +1,18 @@
-let LoopUserMoudels;
+let LoopUserMoudels,LoopUserModelColoring;
+
 function ProjectManagement(Url,bool = true) {
-    if(LoopUserMoudels)
-    clearInterval(LoopUserMoudels);//Delete
+    localStorage.setItem("EditorRenderView",JSON.stringify( false));
+    if(LoopUserMoudels) 
+        clearInterval(LoopUserMoudels);//Delete
+    if (LoopUserModelColoring)
+        clearInterval(LoopUserModelColoring);
     if(bool)
     ShowToast(`正在加载项目!${Url}`);
     let Base_Url = "../FollowEngine_Project/"+Url;
     //Url
     let MoudelIndexUrl = `/Moudels/MoudelIndex.json`;
     let UserMoudelUrl = `/Moudels/UserMoudel.json`;
+    let UserMoudelColorUrl = `/Moudels/ModelShader.json`;
     //Let
     //let MoudelIndex = 0;
     //Bool
@@ -37,13 +42,17 @@ function ProjectManagement(Url,bool = true) {
             .then(data => {
                 localStorage.setItem("UserMoudels",JSON.stringify(data));//写入Moudel
                 Dedicators(LoopUserMoudels);
+                localStorage.setItem("EditorRenderView",JSON.stringify( true));
             })
             .catch(err => {
                 console.error("用户模型读取失败:", err);
+                localStorage.setItem("EditorRenderView",JSON.stringify( true));
             });
     },200);//规定MoudelID以10开头-101
+
+    let UserModelColoring = ReadUserModelColoring(Base_Url,UserMoudelColorUrl);
     
-    if(UserIndexBool){
+    if(UserIndexBool && UserModelColoring){
         ShowToast(`项目:${Url}加载成功！`);
     }
 }
@@ -55,6 +64,20 @@ function Dedicators(LoopUserMoudels){//这里会判断是否加载正确
     if(GetMoudelArrayList !== UserMoudelIndexList){
         console.warn("用户项目未正确加载,正在重新加载");
         clearInterval(LoopUserMoudels);//Delete
+        clearInterval(LoopUserModelColoring);//Delete
         ProjectManagement(document.getElementById("InputProjectsUrl").value,false);//此时是隐式加载不要打印了
     }
+}
+
+function ReadUserModelColoring(Base_Url,UserMoudelColorUrl){//读取用户模型颜色数据-初始化
+    LoopUserModelColoring = setInterval(function(){
+        ReadJSON_User(Base_Url + UserMoudelColorUrl)
+            .then(data => {
+                localStorage.setItem("ModelColoring",JSON.stringify(data));
+            })
+            .catch(err => {
+                console.error("用户模型颜色数据读取失败:", err);
+            });
+    },200)//200ms
+    return true;
 }

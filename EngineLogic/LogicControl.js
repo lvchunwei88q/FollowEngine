@@ -18,7 +18,7 @@ function TickLogicControl(EngineLoopStart, EngineLoopEnd) {
     }else {
         TickLogicControl_CurrentTickTime = CurrentTickTime;
     }
-    //console.log(CurrentTickTime);//这里ms以默认性能30-40为例
+    //console.log(CurrentTickTime);//这里ms以默认性能30ms-40ms为例
     
     //这里的CurrentTickTime是每帧的间隔是需要去计算完的
     AnimationInitialization(CurrentTickTime);

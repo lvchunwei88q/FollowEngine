@@ -18,27 +18,38 @@
     <button class="MenuList Button">加载项目</button>
     <!-- Engine_Object -->
     <hr/>
-    <label class="MenuList Input">
-        <input id="InputX" name="InputX" placeholder="输入X" type="number" value="30">
-    </label>
-    <label class="MenuList Input">
-        <input id="InputY" name="InputY" placeholder="输入Y" type="number" value="30">
-    </label>
-    <button class="MenuList Button">加载JSON文件的选择模型</button>
-    <!-- Engine_MoudelID -->
-    <hr/>
-    <div class="MenuList MoudelIDArray" id="MoudelIDArray">
-        <!-- <div class="MoudelIDArrayList">MoudelID:</div> -->
+    <div class="ContentArray">
+        <div class="ObserveList">
+            Object视图
+        </div>
+        <label class="MenuList Input">
+            <input id="InputX" name="InputX" placeholder="输入X" type="number" value="30">
+        </label>
+        <label class="MenuList Input">
+            <input id="InputY" name="InputY" placeholder="输入Y" type="number" value="30">
+        </label>
+        <button class="MenuList Button">加载JSON文件的选择模型(应急)</button>
+        <!-- Engine_MoudelID -->
+        <hr/>
+        <div class="MenuList MoudelIDArray" id="MoudelIDArray">
+            <!-- <div class="MoudelIDArrayList">MoudelID:</div> -->
+        </div>
+        <!-- Engine_RenderTime -->
+        <hr/>
+        <div class="MenuList" id="RenderTime">RenderTime:</div>
+        <div class="MenuList">LogicTime:</div>
+        <hr/>
+        <label class="MenuList Input">
+            <input id="InputAnimation" name="InputAnimation" placeholder="InputAnimation" type="text">
+        </label>
+        <button class="MenuList Button">StartAnimation</button>
+        <hr/>
+        <label class="MenuList Input">
+            <input id="InputObjectID" name="InputObjectID" placeholder="InputObjectID" type="text">
+        </label>
+        <button class="MenuList Button">输入物体ID</button>
     </div>
-    <!-- Engine_RenderTime -->
-    <hr/>
-    <div class="MenuList" id="RenderTime">RenderTime:</div>
-    <div class="MenuList">LogicTime:</div>
-    <hr/>
-    <label class="MenuList Input">
-        <input id="InputAnimation" name="InputProjectsUrl" placeholder="InputAnimation" type="text">
-    </label>
-    <button class="MenuList Button">StartAnimation</button>
+
 </div>
 <!--Log-->
 <div class="toast-container" id="toastContainer"></div>
@@ -69,6 +80,8 @@
 <script src="Render/Shaders/ShaderGlobalParameters.js"></script>
 <!-- Shader PostProcessing -->
 <script src="Render/Shaders/PostProcessing/ToneMap.js"></script>
+<!-- Shader ShaderAlgorithms -->
+<script src="Render/Shaders/ShaderAlgorithms/SegmentedModelFillingRules.js"></script>
 <!-- Engine Logic System -->
 <script src="EngineLogic/LogicControl.js"></script>
 <!-- Engine Logic Animation -->

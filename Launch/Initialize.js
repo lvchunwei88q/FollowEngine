@@ -183,6 +183,33 @@ function SetEngineClick() {
                 console.error("失败:", err);
             });
     });
+    
+    document.querySelectorAll(".MenuList")[14].addEventListener("click", function () {
+        let InputObjectID = document.getElementById("InputObjectID").value;
+        if (InputObjectID === "") {
+            ShowToast("请输入ObjectID!", "warning",1000);
+            return;
+        }
+        
+        ObjectClassName = InputObjectID;
+        ObjectClassName = `Pixel ObjectID_${ObjectClassName}`;
+        ShowToast("已选择!" + ObjectClassName, "success", 1000);
+        let BObjectLoad = JSON.parse(localStorage.getItem("EditorMoudelsLoad"));
+        let GetObjectID = GetTheObjectID(ObjectClassName), BokGetObjectID = false;//赋值给InputY，X
+
+        for (let i = 1; i <= BObjectLoad.length; i++) {
+            if (BObjectLoad[i - 1].ObjectID === GetObjectID) {
+                BokGetObjectID = true;
+                document.getElementById("InputY").value = BObjectLoad[i - 1].MoudelPostion.Y;
+                document.getElementById("InputX").value = BObjectLoad[i - 1].MoudelPostion.X;
+            }
+        }
+        if (!BokGetObjectID) {
+            setTimeout(function () {
+                ShowToast(ObjectClassName + "不是一个有效的ObjectID!", "warning");
+            }, 500);
+        }
+    })
 
     return true;
 }
@@ -201,5 +228,11 @@ function InitializationParameters() {
     localStorage.setItem("AnimationPlay",JSON.stringify(false));//默认为false
     //这里是存放Animation的地方
     localStorage.setItem("Animation",JSON.stringify(null));//默认为null
+    //这里的锁是在一开始时停止原有的2D函数渲染
+    localStorage.setItem("EditorRenderView",JSON.stringify(true));
+    //这里是防止一时间内过快的点击
+    localStorage.setItem("TimingBuffer",JSON.stringify(true));
+    //这里初始化读取用户模型Shader
+    localStorage.setItem("ModelColoring",JSON.stringify(null));//初始化为Null
     return true;
 }

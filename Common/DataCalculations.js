@@ -196,3 +196,23 @@ function MillisecondtoSecond(x){
         return x;
     }
 }
+
+let Timingbuffer = null;
+
+function TimingBuffer(Time) {
+    // 初始化状态
+    if(localStorage.getItem("TimingBuffer") === null) {
+        localStorage.setItem("TimingBuffer", JSON.stringify(true));
+    }
+
+    // 清除已有定时器避免重复
+    if(Timingbuffer) clearTimeout(Timingbuffer);
+
+    if (JSON.parse(localStorage.getItem("TimingBuffer"))) {
+        localStorage.setItem("TimingBuffer", JSON.stringify(false));
+        Timingbuffer = setTimeout(() => {
+            localStorage.setItem("TimingBuffer", JSON.stringify(true));
+            Timingbuffer = null; // 清除引用
+        }, Math.max(Time, 4)); // 确保不低于4ms
+    }
+}

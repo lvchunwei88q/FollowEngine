@@ -1,6 +1,6 @@
 //后处理着色函数
 function PostProcessingMian(color){
-    let OutColor = [0,0,0];
+    let OutColor = [0,0,0];//默认颜色
     
     //Parameters
     let TonemapParameters = JSON.parse(localStorage.getItem("ToneMapParameters"));

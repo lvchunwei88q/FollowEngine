@@ -4,13 +4,14 @@ function Space2D_User(data, GetquerySelectorAll, F_PrintAndWriteTheObjectID, S_M
                       E_bRenderPaddingBate,IU_Color){
     //let U_Color = `rgba(255,255,255,1)`;
     //console.log(UserMoudelIndexall);
+    let TurnOnFilling = true;
     
     Space2D(data, GetquerySelectorAll, F_PrintAndWriteTheObjectID, S_MoudelIndex, UserMoudelIndexall,
-                     E_bRenderPaddingBate,IU_Color);
+                     E_bRenderPaddingBate,IU_Color,TurnOnFilling);
 }
 
 function Space2D(data, GetquerySelectorAll, F_PrintAndWriteTheObjectID, S_MoudelIndex, S_MoudelIndexall,
-                 E_bRenderPaddingBate,U_Color = `rgba(255,255,255,1)`) {
+                 E_bRenderPaddingBate,U_Color = `rgba(255,255,255,1)`,bTurnOnFilling = false) {
     //const OPostion = [];//偏移位置
     //这里需要注意Moudel的顶点位置需要对应绘制顺序
 
@@ -135,6 +136,8 @@ function Space2D(data, GetquerySelectorAll, F_PrintAndWriteTheObjectID, S_Moudel
                         }
                     });
                 }
+                if (bTurnOnFilling) 
+                    U_Color = SegmentedModelFillingRulesFor(ObjectIndex);//for循环的填涂规则这个更加简单
                 GetquerySelectorAll[Postion - 1].style.background = U_Color;
                 if (ObjectRandomNumbers !== GetTheObjectID(GetquerySelectorAll[Postion - 1].className))
                     GetquerySelectorAll[Postion - 1].classList.add(`ObjectID_${ObjectRandomNumbers}`);
@@ -144,8 +147,14 @@ function Space2D(data, GetquerySelectorAll, F_PrintAndWriteTheObjectID, S_Moudel
 
         if (ObjectRandomNumbers !== 0)//这里需要对模型进行分段-GetDataLength是顶点数量
         {
-            let TheNumberOfModelSegments = JSON.parse(localStorage.getItem("TheNumberOfModelSegments"));
-            let ModelSegmentationArray = JSON.parse(localStorage.getItem("ModelSegmentationArray"));
+            let TheNumberOfModelSegments = null,ModelSegmentationArray = null;
+            let TheNumberOfModelSegment = JSON.parse(localStorage.getItem("TheNumberOfModelSegments"));
+            if (TheNumberOfModelSegment !== null) 
+                TheNumberOfModelSegments = TheNumberOfModelSegment[ObjectIndex];//为多模型准备的
+            let ModelSegmentationArrays = JSON.parse(localStorage.getItem("ModelSegmentationArray"));
+            if (ModelSegmentationArrays !== null) 
+                ModelSegmentationArray = ModelSegmentationArrays[ObjectIndex];//为多模型准备的
+            
             if(TheNumberOfModelSegments !== null && ModelSegmentationArray !== null && TheNumberOfModelSegments > 1){
                 for (let x=0;x < TheNumberOfModelSegments;x++){
                     let TempObjectPostion = [],ModelSegmentationArraylength = 0;
@@ -162,6 +171,8 @@ function Space2D(data, GetquerySelectorAll, F_PrintAndWriteTheObjectID, S_Moudel
                         });
                         ModelSegmentationArraylength = 0;//这里需要重置为0
                     }
+                    if (bTurnOnFilling)
+                        U_Color = SegmentedModelFillingRules(x,ObjectIndex);//分段里的填涂规则
                     ConnectVertices(GetquerySelectorAll, ModelSegmentationArray[x], TempObjectPostion, GetBScreenViewHigh, GetBScreenViewWidth, ObjectRandomNumbers
                         , F_PrintAndWriteTheObjectID, E_bRenderPaddingBate,U_Color);
                 }
@@ -179,7 +190,9 @@ function Space2D(data, GetquerySelectorAll, F_PrintAndWriteTheObjectID, S_Moudel
         `;//这里显示模型的ID
             document.querySelectorAll(`.ObjectID_${ObjectRandomNumbers}`).forEach((item) => {
                 item.addEventListener('click', () => {
-                    //这里写绑定之类的操作
+                    //这里写绑定之类的操作-这里并不推荐你使用这个
+                    if (JSON.parse(localStorage.getItem("TimingBuffer")) === false) return;
+                    
                     ObjectClassName = item.className;
                     console.log("已经选择:" + ObjectClassName);
                     ShowToast("已经选择:" + ObjectClassName);
@@ -193,6 +206,8 @@ function Space2D(data, GetquerySelectorAll, F_PrintAndWriteTheObjectID, S_Moudel
                             document.getElementById("InputX").value = BObjectLoad[i - 1].MoudelPostion.X;
                         }
                     }
+
+                    TimingBuffer(100);//这里防止过快的出现多次提示
                 });
             });
         }

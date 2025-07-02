@@ -1,9 +1,12 @@
 [
   {
-  "MoudelIndex": 1,
+  "MoudelIndex": 3,
 
-  "TheNumberOfModelSegments" : 10
+  "TheNumberOfModelSegments" : [10,1,1]
   },
-
-  [15,15,12,10,11,11,13,10,10,12]
+  [
+    [15,15,12,10,11,11,13,10,10,12],
+    [10],
+    [4]
+  ]
 ]
