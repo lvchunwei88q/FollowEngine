@@ -114,7 +114,7 @@ function AnimationCalculations(AnimationData,EditorMoudelsLoad,CurrentTickTime){
     if (GetTickTime <= 0){//这里说明要进入下一帧了
         AnimationCurrentTick++;
         let AnimationTick = JSON.parse(localStorage.getItem("Animation_Tick"));
-        if(AnimationCurrentTick - AnimationTick <= 0) 
+        if(AnimationCurrentTick - AnimationData.length <= 0) 
             InitializeActionAuxiliary(AnimationData,AnimationCurrentTick);
         else AnimationCurrentTick = AnimationTick;//这里AnimationCurrentTick不可以大于AnimationTick
         AnimationTick -= 1;//Animation_Tick也要减一
@@ -168,4 +168,7 @@ function AnimationCalculations(AnimationData,EditorMoudelsLoad,CurrentTickTime){
     EditorMoudelsLoad[Animation_ObjectID.Index].MoudelPostion.X = CurrentObjectPostion.x;
     EditorMoudelsLoad[Animation_ObjectID.Index].MoudelPostion.Y = CurrentObjectPostion.y;
     localStorage.setItem("EditorMoudelsLoad",JSON.stringify(EditorMoudelsLoad));
+    // 更新HTML
+    document.getElementById("InputX").value = CurrentObjectPostion.x;
+    document.getElementById("InputY").value = CurrentObjectPostion.x;
 }
