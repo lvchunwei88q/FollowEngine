@@ -170,5 +170,5 @@ function AnimationCalculations(AnimationData,EditorMoudelsLoad,CurrentTickTime){
     localStorage.setItem("EditorMoudelsLoad",JSON.stringify(EditorMoudelsLoad));
     // 更新HTML
     document.getElementById("InputX").value = CurrentObjectPostion.x;
-    document.getElementById("InputY").value = CurrentObjectPostion.x;
+    document.getElementById("InputY").value = CurrentObjectPostion.y;
 }
