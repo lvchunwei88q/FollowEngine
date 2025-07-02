@@ -183,3 +183,16 @@ function GetCrossIntersections(p1, p2) {
         i === 0 || (x !== arr[0][0] || y !== arr[0][1])
     );
 }
+
+function SecondtoMillisecond(x){
+    return x * 1000.0;
+}
+
+function MillisecondtoSecond(x){
+    if (x !== 0)
+    return x / 1000.0;
+    else {
+        console.warn("MillisecondIs:0!");
+        return x;
+    }
+}

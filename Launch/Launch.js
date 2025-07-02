@@ -1,6 +1,7 @@
 let F_bFrameLog, F_bCalculatePercentageDebug, F_TheTimeForCalculatingFullNumberOfPixels, F_PixelComputingLog,
     F_PrintAndWriteTheObjectID;//这里就是json的参数
-let E_bRenderPaddingBate = false;
+let E_bRenderPaddingBate = false,E_bTurnOnFramedRendering = false;
+let EngineTickTimeEnd = 0;//这里的参数是因为需要将EngineTickTimeEnd传递给TickLogicControl在GetCurrntTime在执行TickLogicControl后面所以如果不定义全局参数TickLogicControlFunctionGet不到参数
 
 function Launch() {//启动
     let bEngineLoop = true;//控制引擎循环
@@ -43,6 +44,8 @@ function Launch() {//启动
                 //SetLoop
                 ReadJSON_EditorLoop();
             }
+            
+            let EngineTickStartTime = GetCurrentTime();//这里Get的时间需要传递给TickLogicControl
 
             //在浏览器中我们调节大小之后使用80%之类可以为我们动态改变长宽但是可能结果存在小数
             //所以每帧计算前需要先计算出没有小数长宽的比例
@@ -52,12 +55,16 @@ function Launch() {//启动
 
             /* 在一切计算完成之后就可以开始Render了 */
             MainRender(F_TheTimeForCalculatingFullNumberOfPixels, F_PrintAndWriteTheObjectID, F_bFrameLog,
-                E_bRenderPaddingBate);
+                E_bRenderPaddingBate,E_bTurnOnFramedRendering);
+
+            let bTickLogicControl = TickLogicControl(EngineTickStartTime,EngineTickTimeEnd);//这里不是异步通讯所以在返回了false时一定是逻辑错误
 
             bFrameFrameLogTick = FrameLogTick();//FrameLogTick
 
+            EngineTickTimeEnd = GetCurrentTime();
+
             //SetEngineLoop
-            if (bFrameFrameLogTick && bReadJSON)
+            if (bFrameFrameLogTick && bReadJSON && bTickLogicControl)
                 bEngineLoop = true;
         } else {
             //SetEngineLoop
@@ -123,6 +130,10 @@ function ReadJSON_EditorLoop() {
                         if (data[0].RenderPaddingBate) setTimeout(function () {
                             ShowToast("这个功能为实验性！", "warning");
                         }, 200);
+                    }
+                    if (data[1].TurnOnFramedRendering !== E_bTurnOnFramedRendering){
+                        E_bTurnOnFramedRendering = data[1].TurnOnFramedRendering;
+                        ShowToast(data[1].TurnOnFramedRendering ? "开启分帧计算" : "关闭分帧计算","success",1000);
                     }
 
                 })

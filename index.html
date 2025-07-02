@@ -33,6 +33,12 @@
     <!-- Engine_RenderTime -->
     <hr/>
     <div class="MenuList" id="RenderTime">RenderTime:</div>
+    <div class="MenuList">LogicTime:</div>
+    <hr/>
+    <label class="MenuList Input">
+        <input id="InputAnimation" name="InputProjectsUrl" placeholder="InputAnimation" type="text">
+    </label>
+    <button class="MenuList Button">StartAnimation</button>
 </div>
 <!--Log-->
 <div class="toast-container" id="toastContainer"></div>
@@ -63,6 +69,11 @@
 <script src="Render/Shaders/ShaderGlobalParameters.js"></script>
 <!-- Shader PostProcessing -->
 <script src="Render/Shaders/PostProcessing/ToneMap.js"></script>
+<!-- Engine Logic System -->
+<script src="EngineLogic/LogicControl.js"></script>
+<!-- Engine Logic Animation -->
+<script src="EngineLogic/Animation/AnimationInitialization.js"></script>
+
 <script type="text/javascript">
     Launch();
 </script>

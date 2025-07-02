@@ -1,9 +1,12 @@
 let bRenderEngineLoop = true, M_TheTimeForCalculatingFullNumberOfPixels,GShaderLoop = false,
     GetquerySelectorAllIndex = 0, GetquerySelectorAllForEachIndex = 0, RenderF_bFrameLog = false;//循环
 let GetquerySelectorAll;
+let IndexMoudelOrShader = 0;let IndexShaderRenderTime = 0;
+
+const MaxTickis = 1;const MAXShaderRenderTime = 50;
 
 function MainRender(TTFFNOP, F_PrintAndWriteTheObjectID, F_bFrameLog,
-                    E_bRenderPaddingBate) {
+                    E_bRenderPaddingBate,E_bTurnOnFramedRendering) {
     /* 一、渲染管线的主要阶段
 1. 应用阶段（Application Stage）
 CPU端工作：
@@ -44,6 +47,7 @@ GPU端处理，将3D模型转换为屏幕空间的2D坐标：
 
     //渲染与Editor的帧计算分开进行
     if (bRenderEngineLoop) {
+        const CCTimeSpace2D = GetCurrentTime();
         if (GetquerySelectorAllIndex >= 16) {
             GetquerySelectorAllIndex = 0;
             GetquerySelectorAll = document.querySelectorAll(".Pixel");
@@ -51,6 +55,7 @@ GPU端处理，将3D模型转换为屏幕空间的2D坐标：
             GetquerySelectorAll = document.querySelectorAll(".Pixel");
         }
         GetquerySelectorAllIndex++;
+        IndexShaderRenderTime++;
 
         if (GetquerySelectorAllForEachIndex >= 6) {
             GetquerySelectorAllForEachIndex = 0;
@@ -63,22 +68,54 @@ GPU端处理，将3D模型转换为屏幕空间的2D坐标：
         } else if (GetquerySelectorAllForEachIndex === 0) {
         }
         GetquerySelectorAllForEachIndex++;
-
-        let bSpatialTransformation = SpatialTransformation(GetquerySelectorAll, F_PrintAndWriteTheObjectID, RenderF_bFrameLog,
+        
+        //分帧计算第一帧计算SpatialTransformation-Function第二帧计算ShaderLoop-Function
+        let bSpatialTransformation
+        if (E_bTurnOnFramedRendering){
+            if(IndexMoudelOrShader === 0){
+                bSpatialTransformation = SpatialTransformation(GetquerySelectorAll, F_PrintAndWriteTheObjectID,
+                    E_bRenderPaddingBate);//第一步从模型空间转换到世界空间，从世界空间转换到视图空间
+            }
+        }
+        else{
+            bSpatialTransformation = SpatialTransformation(GetquerySelectorAll, F_PrintAndWriteTheObjectID,
                 E_bRenderPaddingBate);//第一步从模型空间转换到世界空间，从世界空间转换到视图空间
+        }
+        IndexMoudelOrShader++;
         
         let bRenderingPerformanceTesting = RenderingPerformanceTesting(GetquerySelectorAll, M_TheTimeForCalculatingFullNumberOfPixels);
-
-        //接下来就是计算着色器了
-        GShaderLoop = ShaderLoop(GetquerySelectorAll);
+        
+        if (E_bTurnOnFramedRendering){
+            if (IndexMoudelOrShader === MaxTickis){
+                //接下来就是计算着色器了
+                GShaderLoop = ShaderLoop(GetquerySelectorAll);
+                const CSTimeRender = GetCurrentTime();
+                if (RenderF_bFrameLog && IndexShaderRenderTime > MAXShaderRenderTime) {
+                    IndexShaderRenderTime = 0;
+                    let RenderTime = CSTimeRender - CCTimeSpace2D;
+                    document.getElementById("RenderTime").innerHTML = `RenderTime:${RenderTime}ms`;
+                }
+            }
+        }
+        else{
+            GShaderLoop = ShaderLoop(GetquerySelectorAll);
+            const CSTimeRender = GetCurrentTime();
+            if (RenderF_bFrameLog && IndexShaderRenderTime > MAXShaderRenderTime) {
+                IndexShaderRenderTime = 0;
+                let RenderTime = CSTimeRender - CCTimeSpace2D;
+                document.getElementById("RenderTime").innerHTML = `RenderTime:${RenderTime}ms`;
+            }
+        } 
 
         if (bSpatialTransformation && bRenderingPerformanceTesting && GShaderLoop) {
             bRenderEngineLoop = true;
         }
+        
+        if (IndexMoudelOrShader >= MaxTickis)IndexMoudelOrShader = 0;
     }
 }
 
-function SpatialTransformation(GetquerySelectorAll, F_PrintAndWriteTheObjectID, RenderF_bFrameLog,
+function SpatialTransformation(GetquerySelectorAll, F_PrintAndWriteTheObjectID,
                                E_bRenderPaddingBate) {
     let GetBScreenViewHigh = BScreenViewHigh;
     let GetBScreenViewWidth = BScreenViewWidth;
@@ -108,16 +145,10 @@ function SpatialTransformation(GetquerySelectorAll, F_PrintAndWriteTheObjectID, 
 
 
         if (data !== null && data !== undefined && (UserMoudelIndexall === 0 || UserMoudelIndexall == null)) {
-            const CCTimeSpace2D = GetCurrentTime();
+            
             for (let i = 1; i <= MoudelIndexall; i++) {
                 Space2D(data, GetquerySelectorAll, F_PrintAndWriteTheObjectID, i, MoudelIndexall,
                     E_bRenderPaddingBate);//这个时Editor模型使用的
-            }
-
-            const CSTimeRender = GetCurrentTime();
-            if (RenderF_bFrameLog && 0) {
-                let RenderTime = CSTimeRender - CCTimeSpace2D;
-                document.getElementById("RenderTime").innerHTML = `RenderTime:${RenderTime}ms`;
             }
         }
         
