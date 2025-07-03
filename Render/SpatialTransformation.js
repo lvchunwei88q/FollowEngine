@@ -54,7 +54,11 @@ function Space2D(data, GetquerySelectorAll, F_PrintAndWriteTheObjectID, S_Moudel
                         "X": 60,//这是新模型的固定位置
                         "Y": 60,
                     },
-                    "ObjectID": ObjectID
+                    "ObjectID": ObjectID,
+                    "ModelZoom":{
+                        "X": 1/5,
+                        "Y": 1/5,
+                    },
                 });
 
                 ObjectRandomNumbers = ObjectID;
@@ -80,7 +84,11 @@ function Space2D(data, GetquerySelectorAll, F_PrintAndWriteTheObjectID, S_Moudel
                     "X": 30,
                     "Y": 30,
                 },
-                "ObjectID": ObjectID
+                "ObjectID": ObjectID,
+                "ModelZoom":{
+                    "X": 1/5,
+                    "Y": 1/5,
+                },
             });
 
             localStorage.setItem("EditorMoudelsLoad", JSON.stringify(BObjectLoad));
@@ -110,8 +118,8 @@ function Space2D(data, GetquerySelectorAll, F_PrintAndWriteTheObjectID, S_Moudel
             let X = item[0];
             let Y = item[1];
 
-            X /= 5;//缩小5倍
-            Y /= 5;//缩小5倍
+            X *= BObjectLoad[ObjectIndex].ModelZoom.X;//缩小ModelZoom.X倍
+            Y *= BObjectLoad[ObjectIndex].ModelZoom.Y;//缩小ModelZoom.Y倍
 
             X += BObjectLoad[ObjectIndex].MoudelPostion.X;
             Y += BObjectLoad[ObjectIndex].MoudelPostion.Y;
@@ -204,6 +212,9 @@ function Space2D(data, GetquerySelectorAll, F_PrintAndWriteTheObjectID, S_Moudel
                         if (BObjectLoad[i - 1].ObjectID === GetObjectID) {
                             document.getElementById("InputY").value = BObjectLoad[i - 1].MoudelPostion.Y;
                             document.getElementById("InputX").value = BObjectLoad[i - 1].MoudelPostion.X;
+                            //加入InputZYandInputZX
+                            document.getElementById("InputZY").value = BObjectLoad[i - 1].ModelZoom.Y * 5;
+                            document.getElementById("InputZX").value = BObjectLoad[i - 1].ModelZoom.X * 5;
                         }
                     }
 
@@ -274,10 +285,7 @@ function ModelFilling(GetquerySelectorAll, ClassName, GetBScreenViewWidth, GetBS
             let ObjectRandomNumbers = GetTheObjectID(ClassName);
             if (ObjectRandomNumbers !== 0) {
                 GetquerySelectorAll[Postion - 1].classList.add(ClassName);
-                if (0) {
-                    //alert();
-                    let a = 5;
-                }//算法都会因为移动过于快导致的问题
+                //算法都会因为移动过于快导致的问题
                 //FloodFill(item.x,item.y,ObjectRandomNumbers,GetBScreenViewHigh,GetBScreenViewWidth,GetquerySelectorAll);
                 FloodFill_For(item.x, item.y, ObjectRandomNumbers, GetBScreenViewHigh, GetBScreenViewWidth, GetquerySelectorAll);
             }

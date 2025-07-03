@@ -126,6 +126,9 @@ function SetEngineClick() {
                         BokGetObjectID = true;
                         document.getElementById("InputY").value = BObjectLoad[i - 1].MoudelPostion.Y;
                         document.getElementById("InputX").value = BObjectLoad[i - 1].MoudelPostion.X;
+                        //加入InputZYandInputZX
+                        document.getElementById("InputZY").value = BObjectLoad[i - 1].ModelZoom.Y * 5;
+                        document.getElementById("InputZX").value = BObjectLoad[i - 1].ModelZoom.X * 5;
                     }
                 }
                 if (!BokGetObjectID) {
@@ -202,6 +205,9 @@ function SetEngineClick() {
                 BokGetObjectID = true;
                 document.getElementById("InputY").value = BObjectLoad[i - 1].MoudelPostion.Y;
                 document.getElementById("InputX").value = BObjectLoad[i - 1].MoudelPostion.X;
+                //加入InputZYandInputZX
+                document.getElementById("InputZY").value = BObjectLoad[i - 1].ModelZoom.Y * 5;
+                document.getElementById("InputZX").value = BObjectLoad[i - 1].ModelZoom.X * 5;
             }
         }
         if (!BokGetObjectID) {
@@ -209,7 +215,110 @@ function SetEngineClick() {
                 ShowToast(ObjectClassName + "不是一个有效的ObjectID!", "warning");
             }, 500);
         }
-    })
+    });
+
+    document.getElementById("InputZX").addEventListener("input", function () {
+        if (ObjectClassName != null) {
+            let GetObjectID = GetTheObjectID(ObjectClassName);
+            let BObjectLoad = JSON.parse(localStorage.getItem("EditorMoudelsLoad"));
+            let IndexBObjectLoad;
+
+            // 通过ID获取元素
+            const checkbox = document.getElementById("ModelScaleLocks");
+            // 检查是否被选中
+            const isChecked = checkbox.checked; // 返回 true/false
+
+            for (let i = 1; i <= BObjectLoad.length; i++) {
+                if (BObjectLoad[i - 1].ObjectID === GetObjectID) {
+                    IndexBObjectLoad = i - 1;
+                }
+            }
+
+            // 获取数据
+            const storageKey = "EditorMoudelsLoad";
+            let originalData;
+            try {
+                originalData = JSON.parse(localStorage.getItem(storageKey)) || {ModelZoom: []};
+            } catch {
+                originalData = {ModelZoom: []};
+            }
+
+            // 深拷贝并修改
+            const updatedData = JSON.parse(JSON.stringify(originalData));
+            if (isChecked)
+            {
+                let tempvalueX = updatedData[IndexBObjectLoad].ModelZoom.X;
+                let tempvalueY = updatedData[IndexBObjectLoad].ModelZoom.Y;
+                let ZoomX = Number(document.getElementById("InputZX").value) * (1/5);
+                updatedData[IndexBObjectLoad].ModelZoom.X = ZoomX;
+                let ZoomY;
+                if (tempvalueX !== 0 && tempvalueY !== 0) 
+                    ZoomY = (ZoomX / tempvalueX) * tempvalueY;
+                else ZoomY = tempvalueY;
+                ZoomY = SmartRound(ZoomY);//数学方法舍弃过于小的数
+                updatedData[IndexBObjectLoad].ModelZoom.Y = ZoomY;
+                document.getElementById("InputZY").value = ZoomY * 5.0;
+            }else 
+                updatedData[IndexBObjectLoad].ModelZoom.X = Number(document.getElementById("InputZX").value) * (1/5);
+
+            // 保存
+            localStorage.setItem(storageKey, JSON.stringify(updatedData));
+        } else {
+            ShowToast("未选择Object!", "warning");
+            document.getElementById("InputZX").value = 5;//默认值
+        }
+    });
+
+    document.getElementById("InputZY").addEventListener("input", function () {
+        if (ObjectClassName != null) {
+            let GetObjectID = GetTheObjectID(ObjectClassName);
+            let BObjectLoad = JSON.parse(localStorage.getItem("EditorMoudelsLoad"));
+            let IndexBObjectLoad;
+            // 通过ID获取元素
+            const checkbox = document.getElementById("ModelScaleLocks");
+            // 检查是否被选中
+            const isChecked = checkbox.checked; // 返回 true/false
+
+            for (let i = 1; i <= BObjectLoad.length; i++) {
+                if (BObjectLoad[i - 1].ObjectID === GetObjectID) {
+                    IndexBObjectLoad = i - 1;
+                }
+            }
+
+            // 获取数据
+            const storageKey = "EditorMoudelsLoad";
+            let originalData;
+            try {
+                originalData = JSON.parse(localStorage.getItem(storageKey)) || {ModelZoom: []};
+            } catch {
+                originalData = {ModelZoom: []};
+            }
+
+            // 深拷贝并修改
+            const updatedData = JSON.parse(JSON.stringify(originalData));
+            if (isChecked)
+            {
+                let tempvalueX = updatedData[IndexBObjectLoad].ModelZoom.X;
+                let tempvalueY = updatedData[IndexBObjectLoad].ModelZoom.Y;
+                let ZoomY = Number(document.getElementById("InputZY").value) * (1/5);
+                updatedData[IndexBObjectLoad].ModelZoom.Y = ZoomY;
+                let ZoomX;
+                if (tempvalueX !== 0 && tempvalueY !== 0)
+                    ZoomX = (ZoomY / tempvalueY) * tempvalueX;
+                else ZoomX = tempvalueX;
+                ZoomX = SmartRound(ZoomX);//数学方法舍弃过于小的数
+                updatedData[IndexBObjectLoad].ModelZoom.X = ZoomX;
+                document.getElementById("InputZX").value = ZoomX * 5.0;
+            }else 
+                updatedData[IndexBObjectLoad].ModelZoom.Y = Number(document.getElementById("InputZY").value * (1/5));
+
+            // 保存
+            localStorage.setItem(storageKey, JSON.stringify(updatedData));
+        } else {
+            ShowToast("未选择Object!", "warning");
+            document.getElementById("InputZY").value = 5;//默认值
+        }
+    });
 
     return true;
 }

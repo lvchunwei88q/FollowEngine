@@ -216,3 +216,11 @@ function TimingBuffer(Time) {
         }, Math.max(Time, 4)); // 确保不低于4ms
     }
 }
+
+function SmartRound(num, precision = 4) {
+    const rounded = parseFloat(num.toFixed(precision));
+    // 如果和整数的差值极小（小于1e-10），则返回整数
+    return Math.abs(rounded - Math.round(rounded)) < 1e-10
+        ? Math.round(rounded)
+        : rounded;
+}

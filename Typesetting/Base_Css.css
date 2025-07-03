@@ -83,7 +83,10 @@
     /* 居中 */
     padding: 0;
     /* 垂直方向自动出现滚动条 */
-    height: 350px;
+    /* 基础高度 60% */
+    height: 60%;
+    /* 动态调整：如果内容不足，高度自动收缩 */
+    max-height: min-content;
     background: #e0e9ff;
     overflow-y: scroll; /* 强制显示滚动轨道 */
     scrollbar-width: none; /* Firefox */
@@ -102,4 +105,20 @@
     text-overflow: ellipsis; /* 显示省略号 */
     max-width: 192px; /* 根据需要设置宽度 */
     display: inline-block; /* 或 block，根据布局需要 */
+}
+
+.ObserveList.Input {
+    height: 24px !important;
+    border: none;
+    background: #a70cff !important;
+}
+
+.ObserveList.Input input {
+    border: none;
+    background: #ffffff !important;
+}
+
+.Boolean{/* 布尔值 */
+    background: #4e4d4d;
+    text-align: center;
 }
