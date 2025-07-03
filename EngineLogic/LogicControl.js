@@ -22,6 +22,7 @@ function TickLogicControl(EngineLoopStart, EngineLoopEnd) {
     
     //这里的CurrentTickTime是每帧的间隔是需要去计算完的
     AnimationInitialization(CurrentTickTime);
-    
+    //在GetGamerInput需要注意Input是每帧Get一个这样却确保逻辑不会混乱
+    CaptureEventsGlobally();//全局输入捕获函数-持续每帧Tick
     return true;
 }

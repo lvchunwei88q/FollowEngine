@@ -1,104 +1,116 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <meta charset="utf-8"/>
-    <title>FollowEngine</title><!-- title -->
-</head>
-<link href="Typesetting/Base_Css.css" rel="stylesheet"/>
-<link href="Typesetting/Log.css" rel="stylesheet"/>
-<body ID="Body">
-<div id="MainInterface"></div>
-<div id="Menu">
-    <div class="MenuList">fps:Nofps</div>
-    <button class="MenuList Button">重新加载Editor模型文件</button>
-    <label class="MenuList Input">
-        <input id="InputProjectsUrl" name="InputProjectsUrl" placeholder="输入项目的Name" type="text">
-    </label>
-    <button class="MenuList Button">保存</button>
-    <button class="MenuList Button">加载项目</button>
-    <!-- Engine_Object -->
-    <hr/>
-    <div class="ContentArray">
-        <div class="ObserveList">
-            Object视图
-        </div>
-        <label class="MenuList Input">
-            <input id="InputX" name="InputX" placeholder="输入X" type="number" value="30">
-        </label>
-        <label class="MenuList Input">
-            <input id="InputY" name="InputY" placeholder="输入Y" type="number" value="30">
-        </label>
-        <hr/>
-        <label class="ObserveList Input">
-            <input id="InputZX" name="InputZX" placeholder="输入X" type="number" value="1">
-        </label>
-        <label class="ObserveList Input">
-            <input id="InputZY" name="InputZY" placeholder="输入Y" type="number" value="1">
-        </label>
-        <div class="ObserveList Boolean">
-            <label for="ModelScaleLocks">开启模型缩放锁</label>
-            <input type="checkbox" name="ModelScaleLocks" id="ModelScaleLocks">
-        </div>
-        <button class="MenuList Button">加载JSON文件的选择模型(应急)</button>
-        <!-- Engine_MoudelID -->
-        <hr/>
-        <div class="MenuList MoudelIDArray" id="MoudelIDArray">
-            <!-- <div class="MoudelIDArrayList">MoudelID:</div> -->
-        </div>
-        <!-- Engine_RenderTime -->
-        <hr/>
-        <div class="MenuList" id="RenderTime">RenderTime:</div>
-        <div class="MenuList">LogicTime:</div>
-        <hr/>
-        <label class="MenuList Input">
-            <input id="InputAnimation" name="InputAnimation" placeholder="InputAnimation" type="text">
-        </label>
-        <button class="MenuList Button">StartAnimation</button>
-        <hr/>
-        <label class="MenuList Input">
-            <input id="InputObjectID" name="InputObjectID" placeholder="InputObjectID" type="text">
-        </label>
-        <button class="MenuList Button">输入物体ID</button>
-    </div>
+	<head>
+		<meta charset="utf-8" />
+		<title>FollowEngine</title><!-- title -->
+	</head>
+	<link href="Typesetting/Base_Css.css" rel="stylesheet" />
+	<link href="Typesetting/Log.css" rel="stylesheet" />
+	<body ID="Body">
+		<div id="MainInterface"></div>
+		<div id="Menu">
+			<div class="ContentArray" style = "height:25%;background: #ffe7c1">
+				<div class="MenuList">fps:Nofps</div>
+				<button class="MenuList Button">重新加载Editor模型文件</button>
+				<label class="MenuList Input">
+					<input id="InputProjectsUrl" name="InputProjectsUrl" placeholder="输入项目的Name" type="text">
+				</label>
+				<button class="MenuList Button">保存</button>
+				<button class="MenuList Button">加载项目</button>
+				<!-- Engine_Object -->
+				<hr />
+			</div>
+			<div class="ContentArray">
+				<div class="ObserveList">
+					Object视图
+				</div>
+				<label class="MenuList Input">
+					<input id="InputX" name="InputX" placeholder="输入X" type="number" value="30">
+				</label>
+				<label class="MenuList Input">
+					<input id="InputY" name="InputY" placeholder="输入Y" type="number" value="30">
+				</label>
+				<hr />
+				<label class="ObserveList Input">
+					<input id="InputZX" name="InputZX" placeholder="输入X" type="number" value="1">
+				</label>
+				<label class="ObserveList Input">
+					<input id="InputZY" name="InputZY" placeholder="输入Y" type="number" value="1">
+				</label>
+				<div class="ObserveList Boolean">
+					<label for="ModelScaleLocks">开启模型缩放锁</label>
+					<input type="checkbox" name="ModelScaleLocks" id="ModelScaleLocks">
+				</div>
+				<button class="MenuList Button">加载JSON文件的选择模型(应急)</button>
+				<!-- Engine_MoudelID -->
+				<hr />
+				<div class="MenuList MoudelIDArray" id="MoudelIDArray">
+					<!-- <div class="MoudelIDArrayList">MoudelID:</div> -->
+				</div>
+				<!-- Engine_RenderTime -->
+				<hr />
+				<div class="MenuList" id="RenderTime">RenderTime:</div>
+				<div class="MenuList">LogicTime:</div>
+				<hr />
+				<label class="MenuList Input">
+					<input id="InputAnimation" name="InputAnimation" placeholder="InputAnimation" type="text">
+				</label>
+				<button class="MenuList Button">StartAnimation</button>
+				<hr />
+				<label class="MenuList Input">
+					<input id="InputObjectID" name="InputObjectID" placeholder="InputObjectID" type="text">
+				</label>
+				<button class="MenuList Button">输入物体ID</button>
+			</div>
+			<div class="ContentArray" style="height:15%;background: cornsilk">
+				<div class="ObserveList">
+					用户视图
+				</div>
+                <div class="MenuList" id="GloballyUserInput">
+					UserInput:Null
+                </div>
+			</div>
+		</div>
+		<!--Log-->
+		<div class="toast-container" id="toastContainer"></div>
+	</body>
+	<!-- Launch -->
+	<script src="Launch/Launch.js"></script>
+	<script src="Launch/FrameLog.js"></script>
+	<script src="Launch/Initialize.js"></script>
+	<!-- Common -->
+	<script src="Common/BasicParameters.js"></script>
+	<script src="Common/DataCalculations.js"></script>
+	<!-- Compute -->
+	<script src="Compute/Typography/Calculations.js"></script>
+	<script src="Compute/Log/Log.js"></script>
+	<script src="Compute/Color/ColorConversion.js"></script>
+	<!-- JSON -->
+	<script src="JSON/ReadJSON.js"></script>
+	<script src="JSON/ProjectManagement.js"></script>
+	<!-- Render -->
+	<script src="Render/RenderingInterface.js"></script>
+	<script src="Render/MainRender.js"></script>
+	<script src="Render/SpatialTransformation.js"></script>
+	<script src="Render/ShaderCoreAlgorithms.js"></script>
+	<!-- Shader -->
+	<script src="Render/Shaders/ShaderCommon.js"></script>
+	<script src="Render/Shaders/PrimaryShader.js"></script>
+	<script src="Render/Shaders/ShaderAlgorithm.js"></script>
+	<script src="Render/Shaders/ShaderGlobalParameters.js"></script>
+	<!-- Shader PostProcessing -->
+	<script src="Render/Shaders/PostProcessing/ToneMap.js"></script>
+	<!-- Shader ShaderAlgorithms -->
+	<script src="Render/Shaders/ShaderAlgorithms/SegmentedModelFillingRules.js"></script>
+	<!-- Engine Logic System -->
+	<script src="EngineLogic/LogicControl.js"></script>
+	<!-- Engine Logic Animation -->
+	<script src="EngineLogic/Animation/AnimationInitialization.js"></script>
+	<!-- Engine Logic GamerInput -->
+	<script src="EngineLogic/GamerInput/CaptureEventsGlobally.js"></script>
+	<script src="EngineLogic/GamerInput/InputMovementLogic.js"></script>
 
-</div>
-<!--Log-->
-<div class="toast-container" id="toastContainer"></div>
-</body>
-<!-- Launch -->
-<script src="Launch/Launch.js"></script>
-<script src="Launch/FrameLog.js"></script>
-<script src="Launch/Initialize.js"></script>
-<!-- Common -->
-<script src="Common/BasicParameters.js"></script>
-<script src="Common/DataCalculations.js"></script>
-<!-- Compute -->
-<script src="Compute/Typography/Calculations.js"></script>
-<script src="Compute/Log/Log.js"></script>
-<script src="Compute/Color/ColorConversion.js"></script>
-<!-- JSON -->
-<script src="JSON/ReadJSON.js"></script>
-<script src="JSON/ProjectManagement.js"></script>
-<!-- Render -->
-<script src="Render/RenderingInterface.js"></script>
-<script src="Render/MainRender.js"></script>
-<script src="Render/SpatialTransformation.js"></script>
-<script src="Render/ShaderCoreAlgorithms.js"></script>
-<!-- Shader -->  
-<script src="Render/Shaders/ShaderCommon.js"></script>
-<script src="Render/Shaders/PrimaryShader.js"></script>
-<script src="Render/Shaders/ShaderAlgorithm.js"></script>
-<script src="Render/Shaders/ShaderGlobalParameters.js"></script>
-<!-- Shader PostProcessing -->
-<script src="Render/Shaders/PostProcessing/ToneMap.js"></script>
-<!-- Shader ShaderAlgorithms -->
-<script src="Render/Shaders/ShaderAlgorithms/SegmentedModelFillingRules.js"></script>
-<!-- Engine Logic System -->
-<script src="EngineLogic/LogicControl.js"></script>
-<!-- Engine Logic Animation -->
-<script src="EngineLogic/Animation/AnimationInitialization.js"></script>
-
-<script type="text/javascript">
-    Launch();
-</script>
+	<script type="text/javascript">
+		Launch();
+	</script>
 </html>

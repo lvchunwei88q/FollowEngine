@@ -52,12 +52,12 @@ function Launch() {//启动
             if (F_bCalculatePercentageDebug !== undefined) {
                 CalculatePercentageTick(F_bCalculatePercentageDebug);//计算百分比
             }
-
+            //逻辑计算要在渲染前面
+            let bTickLogicControl = TickLogicControl(EngineTickStartTime,EngineTickTimeEnd);//这里不是异步通讯所以在返回了false时一定是逻辑错误
+            
             /* 在一切计算完成之后就可以开始Render了 */
             MainRender(F_TheTimeForCalculatingFullNumberOfPixels, F_PrintAndWriteTheObjectID, F_bFrameLog,
                 E_bRenderPaddingBate,E_bTurnOnFramedRendering);
-
-            let bTickLogicControl = TickLogicControl(EngineTickStartTime,EngineTickTimeEnd);//这里不是异步通讯所以在返回了false时一定是逻辑错误
 
             bFrameFrameLogTick = FrameLogTick();//FrameLogTick
 

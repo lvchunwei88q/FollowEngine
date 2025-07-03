@@ -224,3 +224,19 @@ function SmartRound(num, precision = 4) {
         ? Math.round(rounded)
         : rounded;
 }
+
+/**
+ * 根据时间计算0-1的插值
+ * @param {number} time - 输入的时间值
+ * @param {number} [riseEndTime=1] - 达到1的时间点（默认1秒）
+ * @param {number} [startRiseTime=0] - 开始增长的时间点（默认0秒）
+ * @returns {number} 0-1之间的插值
+ */
+function TimeBasedInterpolation(time, riseEndTime = 1, startRiseTime = 0) {
+    // 边界检查
+    if (time <= startRiseTime) return 0;
+    if (time >= riseEndTime) return 1;
+
+    // 线性插值计算
+    return (time - startRiseTime) / (riseEndTime - startRiseTime);
+}
