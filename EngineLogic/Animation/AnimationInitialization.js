@@ -125,6 +125,11 @@ function AnimationCalculations(AnimationData,EditorMoudelsLoad,CurrentTickTime){
     //首先计算出比如1000ms走41次每1ms走多少次
     //接下来就是使用GetTickTime - CurrentTickTime
     if (JSON.parse(localStorage.getItem("Animation_FrameSpacing")) === null){//这里表明是没有计算的
+        if (AnimationBresenHamLine === null){
+            console.error("[AnimationBresenHamLine]:动画系统初始化错误！已停止");
+            localStorage.setItem("AnimationPlay",JSON.stringify(false));//End!
+            return;
+        }
         let AnimationBresenHamLineLenght = AnimationBresenHamLine[AnimationCurrentTick - 1].BresenHamLine.length;//GetAnimationBresenHamLineLenght
         let FrameSpacing = AnimationBresenHamLineLenght / GetTickTime;//这里的GetTickTime一定是在动画数据里的设置的数
         localStorage.setItem("Animation_FrameSpacing",JSON.stringify(FrameSpacing));//这里写入帧间隔
